@@ -8,6 +8,7 @@ import Navbar from "../components/Navbar";
 import StartupLoader from "../components/StartupLoader";
 import { Toaster } from "react-hot-toast";
 
+
 export default function MainLayout() {
   const [loading, setLoading] = useState(true);
 
