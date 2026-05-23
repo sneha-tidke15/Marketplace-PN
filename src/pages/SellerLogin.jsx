@@ -21,8 +21,7 @@ export default function SellerLogin() {
     if (form.password.length < 6) nextErrors.password = "Password must be at least 6 characters";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
-    login({ email: form.email, role: "seller" });
-    navigate("/seller-dashboard");
+    if (login({ email: form.email, password: form.password, role: "seller" })) navigate("/seller-dashboard");
   };
 
   return (

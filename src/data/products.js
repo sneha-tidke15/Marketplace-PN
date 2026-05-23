@@ -1,27 +1,62 @@
 export const categories = [
   "crochet",
   "clay art",
+  "resin art",
   "pot painting",
   "candles",
-  "keychains",
-  "handmade jewelry"
+  "handmade jewelry",
+  "handbags",
+  "embroidery",
+  "knitted wear",
+  "home decor",
+  "handmade paintings",
+  "handmade gifts",
+  "rakhi",
+  "scrapbooks",
+  "handmade cards",
+  "macrame",
+  "terracotta",
+  "customized gifts",
+  "fabric art",
+  "handmade toys",
+  "handmade stationery",
+  "wooden crafts",
+  "floral crafts",
+  "handwoven products"
 ];
 
 export const slugifySeller = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
+const policy = {
+  returnAvailable: true,
+  exchangeAvailable: true,
+  returnDays: 7,
+  exchangeDays: 10,
+  refundRules: "Return allowed for damaged, defective, or wrong-size products only. Customer-damaged handmade pieces are not eligible."
+};
+
 export const products = [
   {
     id: 1,
-    title: "Blush Crochet Tulip Bouquet",
+    title: "Pastel Crochet Shoulder Bag",
     category: "crochet",
-    price: 1299,
+    price: 999,
     discount: 12,
     trend: true,
-    description: "A forever-bloom bouquet handmade with soft cotton yarn, perfect for gifting and cozy room styling.",
+    eventTags: ["Raksha Bandhan", "Friendship Day"],
+    description: "Soft handmade crochet bag in pastel cotton yarn with sturdy handles and a roomy everyday shape.",
     images: [
-      "https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1527866959252-deab85ef7d1b?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1622560480654-d96214fdc887?auto=format&fit=crop&w=900&q=80"
     ],
+    video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    colors: ["Blue", "Pink", "Mint"],
+    sizes: ["Mini", "Regular"],
+    handmadeDetails: "Hand-crocheted with cotton yarn, lined by hand, and finished in small batches.",
+    estimatedDelivery: "4-7 days",
+    policy,
+    shipping: { base: 69, regions: ["All India"], pincodePricing: { "411": 49, "400": 59, "110": 79 } },
     seller: {
       name: "Thread & Bloom Studio",
       location: "Pune, India",
@@ -33,22 +68,60 @@ export const products = [
     },
     rating: 4.9,
     reviews: [
-      { user: "Anaya", rating: 5, text: "So delicate and beautifully packed." },
-      { user: "Meera", rating: 5, text: "Looks dreamy on my work desk." }
+      { user: "Anaya", rating: 5, text: "The stitching is neat and it feels very premium.", image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=300&q=80" },
+      { user: "Meera", rating: 4.6, text: "Exactly the pastel look I wanted." }
     ]
   },
   {
     id: 2,
+    title: "Terracotta Aroma Diffuser Set",
+    category: "terracotta",
+    price: 699,
+    discount: 8,
+    trend: true,
+    eventTags: ["Diwali Sale", "Wedding Season"],
+    description: "Leaf-cut terracotta aroma diffusers handmade by Indian potters for festive home styling.",
+    images: [
+      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1493106819501-66d381c466f1?auto=format&fit=crop&w=900&q=80"
+    ],
+    colors: ["Natural Clay", "Whitewash"],
+    sizes: ["Set of 2", "Set of 4"],
+    handmadeDetails: "Wheel-finished terracotta, hand-carved leaf vents, sun-dried and kiln-fired.",
+    estimatedDelivery: "5-8 days",
+    policy,
+    shipping: { base: 89, regions: ["West", "North", "South"], pincodePricing: { "411": 59, "302": 49, "560": 89 } },
+    seller: {
+      name: "Mitti Mahal",
+      location: "Jaipur, India",
+      verified: true,
+      avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=300&q=80",
+      rating: 4.8,
+      story: "A family pottery studio creating terracotta decor inspired by Indian courtyards.",
+      socials: { instagram: "#", website: "#" }
+    },
+    rating: 4.8,
+    reviews: [{ user: "Riya", rating: 5, text: "Perfect for my Diwali decor and packed safely." }]
+  },
+  {
+    id: 3,
     title: "Pastel Clay Trinket Tray",
     category: "clay art",
     price: 599,
-    discount: 8,
+    discount: 10,
     trend: true,
+    eventTags: ["Mother's Day", "Handmade Gifts"],
     description: "Hand-shaped air-dry clay tray with a glossy finish for rings, earrings, and tiny keepsakes.",
     images: [
       "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?auto=format&fit=crop&w=900&q=80"
     ],
+    colors: ["Blush", "Lilac", "Ivory"],
+    sizes: ["Round", "Oval"],
+    handmadeDetails: "Hand-shaped, painted, sealed, and cured for everyday tabletop use.",
+    estimatedDelivery: "3-6 days",
+    policy,
+    shipping: { base: 59, regions: ["All India"], pincodePricing: { "400": 39, "411": 49 } },
     seller: {
       name: "Clay Cloud Co.",
       location: "Mumbai, India",
@@ -62,17 +135,24 @@ export const products = [
     reviews: [{ user: "Riya", rating: 5, text: "The colors are even prettier in person." }]
   },
   {
-    id: 3,
+    id: 4,
     title: "Mint Hand-Painted Terracotta Pot",
     category: "pot painting",
     price: 749,
     discount: 15,
     trend: false,
+    eventTags: ["Wedding Season", "New Year"],
     description: "Terracotta planter painted with mint florals and sealed for long-lasting indoor charm.",
     images: [
       "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1459156212016-c812468e2115?auto=format&fit=crop&w=900&q=80"
     ],
+    colors: ["Mint", "Marigold", "Indigo"],
+    sizes: ["Small", "Medium", "Large"],
+    handmadeDetails: "Painted by hand on terracotta with floral folk-inspired detailing.",
+    estimatedDelivery: "5-9 days",
+    policy,
+    shipping: { base: 99, regions: ["All India"], pincodePricing: { "302": 59, "110": 89 } },
     seller: {
       name: "Pottery Palette",
       location: "Jaipur, India",
@@ -86,17 +166,24 @@ export const products = [
     reviews: [{ user: "Tara", rating: 4, text: "Great finish and quick shipping." }]
   },
   {
-    id: 4,
+    id: 5,
     title: "Lavender Soy Wax Candle",
     category: "candles",
     price: 899,
     discount: 10,
     trend: true,
+    eventTags: ["Diwali Sale", "Christmas", "New Year"],
     description: "Slow-poured soy candle with lavender notes, dried flowers, and a reusable glass jar.",
     images: [
       "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1602526432604-029a709e131c?auto=format&fit=crop&w=900&q=80"
     ],
+    colors: ["Lavender", "Rose", "Sandalwood"],
+    sizes: ["120g", "200g"],
+    handmadeDetails: "Small-batch soy wax candle poured by hand with dried florals.",
+    estimatedDelivery: "3-5 days",
+    policy,
+    shipping: { base: 59, regions: ["All India"], pincodePricing: { "560": 39, "400": 49 } },
     seller: {
       name: "Glow Nest Candles",
       location: "Bengaluru, India",
@@ -110,17 +197,24 @@ export const products = [
     reviews: [{ user: "Nisha", rating: 5, text: "Soft scent and beautiful jar." }]
   },
   {
-    id: 5,
-    title: "Cute Resin Initial Keychain",
-    category: "keychains",
-    price: 349,
+    id: 6,
+    title: "Pressed Flower Resin Coasters",
+    category: "resin art",
+    price: 799,
     discount: 5,
     trend: false,
-    description: "Personalized resin initial keychain with pressed florals, gold flakes, and pastel charms.",
+    eventTags: ["Housewarming", "Wedding Season"],
+    description: "Clear resin coaster set with pressed flowers and gold flakes for premium handmade gifting.",
     images: [
-      "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1607344645866-009c320f2133?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?auto=format&fit=crop&w=900&q=80"
     ],
+    colors: ["Clear Gold", "Pink Bloom", "Blue Bloom"],
+    sizes: ["Set of 2", "Set of 4"],
+    handmadeDetails: "Layered resin artwork with dried botanicals, hand-sanded edges, and glossy finish.",
+    estimatedDelivery: "6-10 days",
+    policy,
+    shipping: { base: 79, regions: ["All India"], pincodePricing: { "440": 49, "400": 59 } },
     seller: {
       name: "Tiny Spark Studio",
       location: "Nagpur, India",
@@ -134,17 +228,24 @@ export const products = [
     reviews: [{ user: "Kavya", rating: 5, text: "Adorable gift for my sister." }]
   },
   {
-    id: 6,
+    id: 7,
     title: "Pearl Bead Choker Necklace",
     category: "handmade jewelry",
     price: 999,
     discount: 18,
     trend: true,
+    eventTags: ["Mother's Day", "Wedding Season"],
     description: "Hand-strung pearl and pastel bead choker with an adjustable gold-plated clasp.",
     images: [
       "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?auto=format&fit=crop&w=900&q=80"
     ],
+    colors: ["Pearl", "Rose Gold", "Gold"],
+    sizes: ["14 inch", "16 inch", "Adjustable"],
+    handmadeDetails: "Hand-strung freshwater-inspired pearls and pastel beads with adjustable clasp.",
+    estimatedDelivery: "3-6 days",
+    policy,
+    shipping: { base: 49, regions: ["All India"], pincodePricing: { "110": 39, "400": 39 } },
     seller: {
       name: "Luna Beads",
       location: "Delhi, India",
@@ -158,17 +259,24 @@ export const products = [
     reviews: [{ user: "Sara", rating: 5, text: "Premium quality and so elegant." }]
   },
   {
-    id: 7,
+    id: 8,
     title: "Crochet Daisy Tote Charm",
     category: "crochet",
     price: 449,
     discount: 7,
     trend: false,
+    eventTags: ["Friendship Day", "Handmade Gifts"],
     description: "A soft crochet daisy charm for totes, backpacks, and keys.",
     images: [
       "https://images.unsplash.com/photo-1613843351058-1dd06fda7c80?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=900&q=80"
     ],
+    colors: ["Daisy", "Sunflower", "Rose"],
+    sizes: ["Single", "Pair"],
+    handmadeDetails: "Hand-crocheted charm with keyring hardware and soft yarn petals.",
+    estimatedDelivery: "3-5 days",
+    policy,
+    shipping: { base: 39, regions: ["All India"], pincodePricing: { "411": 29 } },
     seller: {
       name: "Thread & Bloom Studio",
       location: "Pune, India",
@@ -182,17 +290,24 @@ export const products = [
     reviews: [{ user: "Isha", rating: 4, text: "Very cute and lightweight." }]
   },
   {
-    id: 8,
+    id: 9,
     title: "Blush Floral Hoop Earrings",
     category: "handmade jewelry",
     price: 699,
     discount: 11,
     trend: true,
+    eventTags: ["Mother's Day", "Wedding Season"],
     description: "Lightweight floral hoop earrings made with polymer clay petals and hypoallergenic hooks.",
     images: [
       "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80",
       "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=900&q=80"
     ],
+    colors: ["Blush", "Ivory", "Lilac"],
+    sizes: ["Small", "Medium"],
+    handmadeDetails: "Polymer clay petals shaped and assembled by hand with hypoallergenic hooks.",
+    estimatedDelivery: "4-7 days",
+    policy,
+    shipping: { base: 49, regions: ["All India"], pincodePricing: { "400": 29, "110": 39 } },
     seller: {
       name: "Clay Cloud Co.",
       location: "Mumbai, India",
@@ -204,6 +319,99 @@ export const products = [
     },
     rating: 4.7,
     reviews: [{ user: "Diya", rating: 5, text: "Comfortable and exactly my style." }]
+  },
+  {
+    id: 10,
+    title: "Macrame Wall Hanging Decor",
+    category: "macrame",
+    price: 1199,
+    discount: 14,
+    trend: true,
+    eventTags: ["New Year", "Wedding Season"],
+    description: "Boho macrame wall decor knotted with cotton cord and natural wooden dowel.",
+    images: [
+      "https://images.unsplash.com/photo-1616627547584-bf28cee262db?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1522758971460-1d21eed7dc1d?auto=format&fit=crop&w=900&q=80"
+    ],
+    colors: ["Ivory", "Beige", "Rust"],
+    sizes: ["18 inch", "24 inch"],
+    handmadeDetails: "Hand-knotted cotton cord with symmetrical macrame patterns.",
+    estimatedDelivery: "5-8 days",
+    policy,
+    shipping: { base: 99, regions: ["All India"], pincodePricing: { "560": 79, "411": 69 } },
+    seller: {
+      name: "Knot Kala Studio",
+      location: "Bengaluru, India",
+      verified: true,
+      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
+      rating: 4.9,
+      story: "Modern macrame decor made by women-led craft circles.",
+      socials: { instagram: "#", website: "#" }
+    },
+    rating: 4.8,
+    reviews: [{ user: "Leena", rating: 4.8, text: "Beautiful texture and very neatly knotted." }]
+  },
+  {
+    id: 11,
+    title: "Hand-Embroidered Cushion Cover",
+    category: "embroidery",
+    price: 899,
+    discount: 9,
+    trend: false,
+    eventTags: ["Diwali Sale", "New Year"],
+    description: "Cotton cushion cover with hand embroidery inspired by Indian garden motifs.",
+    images: [
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80"
+    ],
+    colors: ["Ivory", "Peach", "Sage"],
+    sizes: ["16 x 16", "18 x 18"],
+    handmadeDetails: "Hand embroidery on cotton fabric with concealed zip closure.",
+    estimatedDelivery: "5-7 days",
+    policy,
+    shipping: { base: 69, regions: ["All India"], pincodePricing: { "110": 49, "302": 49 } },
+    seller: {
+      name: "Sui Dhaaga Collective",
+      location: "Lucknow, India",
+      verified: true,
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80",
+      rating: 4.7,
+      story: "A collective preserving slow embroidery and soft home textiles.",
+      socials: { instagram: "#", website: "#" }
+    },
+    rating: 4.6,
+    reviews: [{ user: "Pooja", rating: 4.4, text: "Looks handcrafted and premium." }]
+  },
+  {
+    id: 12,
+    title: "Handmade Wooden Toy Train",
+    category: "handmade toys",
+    price: 1299,
+    discount: 16,
+    trend: false,
+    eventTags: ["Christmas", "New Year"],
+    description: "Child-safe wooden toy train polished by hand with non-toxic colors.",
+    images: [
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=900&q=80"
+    ],
+    colors: ["Natural", "Pastel"],
+    sizes: ["3 coach", "5 coach"],
+    handmadeDetails: "Hand-cut wooden pieces, sanded edges, and non-toxic finish.",
+    estimatedDelivery: "6-9 days",
+    policy,
+    shipping: { base: 99, regions: ["All India"], pincodePricing: { "560": 89, "400": 79 } },
+    seller: {
+      name: "Woodland Khel",
+      location: "Mysuru, India",
+      verified: true,
+      avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=80",
+      rating: 4.6,
+      story: "Safe handmade toys crafted from responsibly sourced wood.",
+      socials: { instagram: "#", website: "#" }
+    },
+    rating: 4.5,
+    reviews: [{ user: "Harini", rating: 4.7, text: "My nephew loved it, and the finish is smooth." }]
   }
 ];
 
@@ -223,9 +431,19 @@ export const sellers = Array.from(
 );
 
 export const testimonials = [
-  { name: "Aarohi", text: "PastelNest makes discovering handmade gifts feel joyful and personal.", rating: 5 },
-  { name: "Saanvi", text: "The seller stories helped me find artists I now buy from every month.", rating: 5 },
-  { name: "Priya", text: "A beautiful shopping experience with thoughtful product details.", rating: 4 }
+  { name: "Aarohi", role: "Customer", text: "PastelNest makes discovering handmade gifts feel joyful and personal.", rating: 5, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80" },
+  { name: "Saanvi", role: "Seller", text: "The seller dashboard feels simple enough for a small business owner to manage daily.", rating: 5, image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=80" },
+  { name: "Priya", role: "Customer", text: "A premium shopping experience with useful product details and maker stories.", rating: 4.7, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80" }
+];
+
+export const festiveEvents = [
+  { name: "Diwali Sale", date: "2026-11-08", offer: "Up to 35% off handmade decor", categories: ["candles", "terracotta", "pot painting"] },
+  { name: "Raksha Bandhan", date: "2026-08-28", offer: "Personalized gifts and rakhi specials", categories: ["crochet", "handmade gifts", "rakhi"] },
+  { name: "Mother's Day", date: "2027-05-09", offer: "Jewelry, candles, and keepsakes", categories: ["handmade jewelry", "candles", "clay art"] },
+  { name: "Friendship Day", date: "2026-08-02", offer: "Cute crochet and customized gifts", categories: ["crochet", "customized gifts"] },
+  { name: "Wedding Season", date: "2026-12-01", offer: "Premium artisan favors and decor", categories: ["macrame", "resin art", "handmade jewelry"] },
+  { name: "Christmas", date: "2026-12-25", offer: "Handmade toys and cozy gifting", categories: ["handmade toys", "candles"] },
+  { name: "New Year", date: "2027-01-01", offer: "Fresh home decor drops", categories: ["home decor", "embroidery", "wooden crafts"] }
 ];
 
 export const sellerStories = [

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
 import { FiMail } from "react-icons/fi";
 import snehaImg from "../assets/SNEHA.jpeg";
 
@@ -31,9 +31,6 @@ export default function DeveloperSection() {
             <div className="mt-7 flex justify-center gap-3">
               <a href="https://www.linkedin.com/in/sneha-tidke15" target="_blank" rel="noreferrer" className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-pastelPink via-lavender to-pastelBlue text-lg text-ink shadow-sm transition hover:-translate-y-1 hover:scale-110 hover:shadow-glow" aria-label="LinkedIn profile">
                 <FaLinkedin />
-              </a>
-              <a href="https://github.com/sneha-tidke15" target="_blank" rel="noreferrer" className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-pastelPink via-lavender to-pastelBlue text-lg text-ink shadow-sm transition hover:-translate-y-1 hover:scale-110 hover:shadow-glow" aria-label="GitHub profile">
-                <FaGithub />
               </a>
               <a href="mailto:snehatidke43@gmail.com" className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-pastelPink via-lavender to-pastelBlue text-lg text-ink shadow-sm transition hover:-translate-y-1 hover:scale-110 hover:shadow-glow" aria-label="Email Sneha">
                 <FiMail />

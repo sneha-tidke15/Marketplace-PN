@@ -18,7 +18,7 @@ export default function ProductCard({ product, onQuickView }) {
     >
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative aspect-[4/5] overflow-hidden rounded-b-[30px]">
-          <img src={product.images[0]} alt={product.title} className="h-full w-full object-cover transition duration-500 hover:scale-110" />
+          <img src={product.images[0]} alt={product.title} loading="lazy" className="h-full w-full object-cover transition duration-500 hover:scale-110" />
           <div className="absolute left-4 top-4 flex flex-col gap-2">
             {product.trend && <span className="rounded-full bg-pastelPink px-3 py-1 text-xs font-extrabold">Trending</span>}
             <span className="rounded-full bg-mint px-3 py-1 text-xs font-extrabold">{product.discount}% off</span>
@@ -42,6 +42,7 @@ export default function ProductCard({ product, onQuickView }) {
           <div className="flex gap-2">
             <button
               type="button"
+              title="View Product"
               onClick={() => onQuickView(product)}
               className="grid h-10 w-10 place-items-center rounded-full bg-pastelBlue text-ink transition hover:scale-105"
               aria-label="Quick view"
@@ -50,6 +51,7 @@ export default function ProductCard({ product, onQuickView }) {
             </button>
             <button
               type="button"
+              title="Move to Cart"
               onClick={() => {
                 if (!isCustomer) {
                   showToast("Please login first");

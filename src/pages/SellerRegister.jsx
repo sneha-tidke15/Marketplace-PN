@@ -27,8 +27,9 @@ export default function SellerRegister() {
     if (!form.description.trim()) nextErrors.description = "Describe your handmade shop";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
-    register({ name: form.ownerName, email: form.email, role: "seller" });
-    navigate("/seller-dashboard");
+    if (register({ name: form.ownerName, shopName: form.shopName, email: form.email, phone: form.phone, password: form.password, description: form.description, socials: form.socials, role: "seller" })) {
+      navigate("/seller-dashboard");
+    }
   };
 
   return (

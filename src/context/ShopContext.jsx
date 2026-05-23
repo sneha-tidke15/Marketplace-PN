@@ -9,6 +9,13 @@ export function ShopProvider({ children }) {
   const [wishlist, setWishlist] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
+  const [notifications, setNotifications] = useState(() => {
+    const saved = localStorage.getItem("pastelnest-notifications");
+    return saved ? JSON.parse(saved) : [
+      { id: "n1", role: "customer", text: "Welcome to PastelNest. Track handmade orders here.", read: false },
+      { id: "n2", role: "seller", text: "New order notifications will appear in your seller studio.", read: false }
+    ];
+  });
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem("pastelnest-user");
     return savedUser ? JSON.parse(savedUser) : null;
@@ -27,6 +34,10 @@ export function ShopProvider({ children }) {
       localStorage.removeItem("pastelnest-user");
     }
   }, [user]);
+
+  useEffect(() => {
+    localStorage.setItem("pastelnest-notifications", JSON.stringify(notifications));
+  }, [notifications]);
 
   const showToast = useCallback((message) => {
     toast(message, {
@@ -71,6 +82,13 @@ export function ShopProvider({ children }) {
     return true;
   };
 
+  const getAccounts = () => JSON.parse(localStorage.getItem("pastelnest-accounts") || "[]");
+  const saveAccounts = (accounts) => localStorage.setItem("pastelnest-accounts", JSON.stringify(accounts));
+
+  const addNotification = (role, text) => {
+    setNotifications((items) => [{ id: `n-${Date.now()}`, role, text, read: false }, ...items].slice(0, 12));
+  };
+
   const removeFromCart = (id) => {
     setCart((items) => items.filter((item) => item.id !== id));
     showToast("Item removed from cart");
@@ -99,15 +117,38 @@ export function ShopProvider({ children }) {
   }, []);
 
   // Fake authentication helpers keep this project frontend-only.
-  const login = ({ email, role = "customer" }) => {
-    const name = email?.split("@")[0] || (role === "seller" ? "Seller" : "Customer");
-    setUser({ name, email, role });
+  const login = ({ email, phone, password, role = "customer" }) => {
+    const accounts = getAccounts();
+    const account = accounts.find((item) =>
+      item.role === role &&
+      (item.email?.toLowerCase() === email?.toLowerCase() || item.phone === phone) &&
+      (!password || item.password === password)
+    );
+    if (!account && accounts.length) {
+      showToast("No matching account found");
+      return false;
+    }
+    const name = account?.name || email?.split("@")[0] || (role === "seller" ? "Seller" : "Customer");
+    setUser({ ...account, name, email: account?.email || email, phone: account?.phone || phone, role });
     showToast(`${role === "seller" ? "Seller" : "Customer"} login successful`);
+    return true;
   };
 
-  const register = ({ name, email, role = "customer" }) => {
-    setUser({ name, email, role });
+  const register = (account) => {
+    const role = account.role || "customer";
+    const accounts = getAccounts();
+    const emailExists = accounts.some((item) => item.email?.toLowerCase() === account.email?.toLowerCase());
+    const phoneExists = accounts.some((item) => item.phone === account.phone);
+    if (emailExists || phoneExists) {
+      showToast(emailExists ? "Email already registered" : "Mobile number already registered");
+      return false;
+    }
+    const savedAccount = { ...account, role, id: `acc-${Date.now()}` };
+    saveAccounts([...accounts, savedAccount]);
+    setUser(savedAccount);
     showToast(`${role === "seller" ? "Seller" : "Customer"} account created`);
+    addNotification(role, role === "seller" ? "Seller store registered successfully" : "Customer account created successfully");
+    return true;
   };
 
   const logout = () => {
@@ -144,7 +185,9 @@ export function ShopProvider({ children }) {
     addRecentlyViewed,
     login,
     register,
-    logout
+    logout,
+    notifications,
+    addNotification
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

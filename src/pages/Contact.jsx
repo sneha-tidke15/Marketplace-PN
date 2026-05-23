@@ -1,29 +1,54 @@
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
-import { FiMail, FiPhone } from "react-icons/fi";
+import { FiMail, FiMapPin, FiPhone } from "react-icons/fi";
 import PageTransition from "../components/PageTransition";
+
+const queryTypes = [
+  "How to return a damaged product",
+  "How to contact a seller",
+  "Delivery delay support",
+  "Payment issues",
+  "Handmade customization queries"
+];
 
 export default function Contact() {
   return (
     <PageTransition>
       <section className="container-soft grid gap-8 py-12 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <h1 className="text-5xl font-black">Contact PastelNest</h1>
-          <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Questions about sellers, products, or project presentation? Send a message and the friendly UI will pretend to help instantly.</p>
+        <div className="rounded-[30px] bg-[#fff0df] p-8 shadow-soft dark:bg-white/10">
+          <p className="text-sm font-black uppercase tracking-[0.22em] text-rose-500">Support</p>
+          <h1 className="mt-4 text-4xl font-black md:text-6xl">Contact PastelNest</h1>
+          <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Get help with handmade returns, seller communication, delivery delays, payments, or custom product requests.</p>
+          <div className="mt-6 grid gap-3">
+            <p className="flex items-center gap-3 font-bold"><FiMail /> hello@pastelnest.com</p>
+            <p className="flex items-center gap-3 font-bold"><FiPhone /> +91 98765 43210</p>
+            <p className="flex items-center gap-3 font-bold"><FiMapPin /> Pune, Maharashtra</p>
+          </div>
           <div className="mt-6 flex gap-3">
-            {[FiMail, FiPhone, FaInstagram, FaLinkedin].map((Icon, index) => <a key={index} href="#" className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-pastelPink to-pastelBlue shadow-sm transition hover:-translate-y-1"><Icon /></a>)}
+            {[FiMail, FiPhone, FaInstagram, FaLinkedin].map((Icon, index) => <a title="Contact icon" key={index} href="#" className="grid h-12 w-12 place-items-center rounded-full bg-white text-ink shadow-sm transition hover:-translate-y-1 dark:bg-white/10 dark:text-white"><Icon /></a>)}
           </div>
         </div>
-        <form className="glass-card grid gap-4 rounded-[34px] p-6">
-          <input placeholder="Name" className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-          <input placeholder="Email" className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-          <textarea placeholder="Message" className="min-h-36 rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
+        <form className="glass-card grid gap-4 rounded-[30px] p-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <input required placeholder="Name" className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
+            <input required placeholder="Email" type="email" className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
+            <input required placeholder="Mobile number" className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
+            <select required className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10">
+              <option value="">Select query type</option>
+              {queryTypes.map((type) => <option key={type}>{type}</option>)}
+            </select>
+          </div>
+          <textarea required placeholder="Describe your query" className="min-h-36 rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
           <button className="pill-button bg-ink text-white dark:bg-pastelPink dark:text-ink">Send message</button>
         </form>
       </section>
       <section className="container-soft pb-14">
-        <h2 className="mb-5 text-3xl font-black">FAQ</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          {["Is this a real backend store?", "Can sellers add products?", "Is checkout real?"].map((question) => <details key={question} className="glass-card rounded-[24px] p-5"><summary className="cursor-pointer font-black">{question}</summary><p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">This frontend-only project uses dummy JSON data and Context API for demo interactions.</p></details>)}
+        <div className="grid gap-4 md:grid-cols-5">
+          {queryTypes.map((query) => (
+            <div key={query} className="glass-card rounded-[22px] p-5">
+              <h2 className="font-black">{query}</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">Our frontend demo routes this to the right PastelNest support flow.</p>
+            </div>
+          ))}
         </div>
       </section>
     </PageTransition>

@@ -27,8 +27,9 @@ export default function Register() {
     if (!form.address.trim()) nextErrors.address = "Address is required";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
-    register({ name: form.name, email: form.email, role: "customer" });
-    navigate("/customer-dashboard");
+    if (register({ name: form.name, email: form.email, phone: form.phone, password: form.password, address: form.address, role: "customer" })) {
+      navigate("/customer-dashboard");
+    }
   };
 
   return (

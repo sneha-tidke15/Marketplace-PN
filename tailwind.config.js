@@ -14,7 +14,7 @@ export default {
       },
       boxShadow: {
         soft: "0 24px 70px rgba(150, 115, 160, 0.16)",
-        glow: "0 0 35px rgba(255, 214, 232, 0.85)"
+        glow: "0 16px 38px rgba(180, 126, 150, 0.18)"
       },
       fontFamily: {
         display: ["Inter", "ui-sans-serif", "system-ui"]

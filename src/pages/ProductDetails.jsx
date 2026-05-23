@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { FaInstagram } from "react-icons/fa";
-import { FiCheckCircle, FiGlobe, FiShoppingBag, FiZap } from "react-icons/fi";
+import { FiCheckCircle, FiGlobe, FiRefreshCw, FiShoppingBag, FiTruck, FiVideo, FiZap } from "react-icons/fi";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import PageTransition from "../components/PageTransition";
 import ProductCard from "../components/ProductCard";
@@ -59,6 +59,16 @@ export default function ProductDetails() {
           <div className="mt-4"><RatingStars rating={product.rating} /></div>
           <p className="mt-5 text-4xl font-black">₹{product.price}</p>
           <p className="mt-5 leading-8 text-slate-600 dark:text-slate-200">{product.description}</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="text-sm font-black uppercase text-slate-500 dark:text-slate-300">Color variants</p>
+              <div className="mt-2 flex flex-wrap gap-2">{product.colors?.map((color) => <span key={color} className="rounded-full bg-white/70 px-3 py-2 text-sm font-bold dark:bg-white/10">{color}</span>)}</div>
+            </div>
+            <div>
+              <p className="text-sm font-black uppercase text-slate-500 dark:text-slate-300">Size variants</p>
+              <div className="mt-2 flex flex-wrap gap-2">{product.sizes?.map((size) => <span key={size} className="rounded-full bg-white/70 px-3 py-2 text-sm font-bold dark:bg-white/10">{size}</span>)}</div>
+            </div>
+          </div>
           <div className="mt-7 flex flex-wrap gap-3">
             <button onClick={handleAddToCart} className="pill-button bg-ink text-white hover:shadow-glow dark:bg-pastelPink dark:text-ink"><FiShoppingBag /> Add to cart</button>
             <button onClick={handleBuyNow} className="pill-button bg-pastelPink text-ink hover:scale-[1.02] dark:bg-pastelBlue dark:text-ink"><FiZap /> Buy now</button>
@@ -80,13 +90,24 @@ export default function ProductDetails() {
               <a href={product.seller.socials.website} className="grid h-10 w-10 place-items-center rounded-full bg-pastelBlue"><FiGlobe /></a>
             </div>
           </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl bg-white/65 p-4 font-bold dark:bg-white/10"><FiTruck className="mb-2 text-rose-500" /> Estimated delivery<br /><span className="text-sm text-slate-600 dark:text-slate-200">{product.estimatedDelivery}</span></div>
+            <div className="rounded-2xl bg-white/65 p-4 font-bold dark:bg-white/10"><FiRefreshCw className="mb-2 text-rose-500" /> Return policy<br /><span className="text-sm text-slate-600 dark:text-slate-200">{product.policy?.returnAvailable ? `${product.policy.returnDays} days` : "No returns"}</span></div>
+            <div className="rounded-2xl bg-white/65 p-4 font-bold dark:bg-white/10"><FiVideo className="mb-2 text-rose-500" /> Product video<br /><span className="text-sm text-slate-600 dark:text-slate-200">{product.video ? "Available" : "Coming soon"}</span></div>
+          </div>
+          <div className="glass-card mt-6 rounded-[24px] p-5">
+            <h2 className="text-xl font-black">Handmade details</h2>
+            <p className="mt-2 leading-7 text-slate-600 dark:text-slate-200">{product.handmadeDetails}</p>
+            <h3 className="mt-4 font-black">Return and exchange</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">{product.policy?.refundRules}</p>
+          </div>
         </div>
       </section>
 
       <section className="container-soft py-10">
         <h2 className="mb-5 text-3xl font-black">Reviews</h2>
         <div className="grid gap-5 md:grid-cols-3">
-          {product.reviews.map((review) => <ReviewCard key={review.user} review={review} />)}
+          {product.reviews.map((review) => <ReviewCard key={review.user} review={review} highlight={review.rating > 3.5} />)}
         </div>
       </section>
 
