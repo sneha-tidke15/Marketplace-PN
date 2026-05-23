@@ -44,19 +44,6 @@ export default function Home() {
       </section>
 
       <section className="container-soft py-14">
-        <SectionHeading eyebrow="Latest trends" title="Pastel pieces shoppers love" text="Pearl jewelry, lavender candles, and keepsake trays are leading this week." />
-        <div className="grid gap-5 md:grid-cols-3">
-          {["Pearlcore details", "Desk decor gifts", "Cozy candle corners"].map((trend, index) => (
-            <div key={trend} className="glass-card rounded-[30px] p-6">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-pastelPink text-xl font-black">{index + 1}</span>
-              <h3 className="mt-5 text-2xl font-black">{trend}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">Soft colors, handmade textures, and personalized details are shaping this season.</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="container-soft py-14">
         <SectionHeading eyebrow="Featured Small Businesses" title="Meet the makers behind the magic" text="Each shop has its own products, story, rating, and verified seller profile." />
         {loadingSections ? <SellerSkeleton /> : (
           <div className="grid gap-6 md:grid-cols-3">
@@ -72,7 +59,6 @@ export default function Home() {
         </div>
       </section>
 
-      <NewsletterSection />
       <DeveloperSection />
       <QuickViewModal product={quickProduct} onClose={() => setQuickProduct(null)} />
     </PageTransition>

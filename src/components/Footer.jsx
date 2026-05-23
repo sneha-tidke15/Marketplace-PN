@@ -39,13 +39,7 @@ export default function Footer() {
           <div className="mt-4 grid grid-cols-2 gap-3 text-sm font-semibold capitalize text-slate-600 dark:text-slate-200">
             {categories.map((category) => <Link key={category} to={`/shop?category=${encodeURIComponent(category)}`}>{category}</Link>)}
           </div>
-          <div className="mt-6 flex gap-3">
-            {[FaGithub, FaLinkedin, FaInstagram, FiGlobe, FiMail].map((Icon, index) => (
-              <a key={index} href="#" className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-pastelPink to-pastelBlue text-ink shadow-sm transition hover:-translate-y-1 hover:shadow-glow" aria-label="Social link">
-                <Icon />
-              </a>
-            ))}
-          </div>
+          
         </div>
 
         <div>
@@ -59,11 +53,18 @@ export default function Footer() {
           <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-200"><FiMail /> hello@pastelnest.com</p>
           <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-200"><FiPhone /> +91 98765 43210</p>
         </div>
+         <div className="mt-6 flex gap-3">
+            {[FaGithub, FaLinkedin, FaInstagram, FiGlobe, FiMail].map((Icon, index) => (
+              <a key={index} href="#" className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-pastelPink to-pastelBlue text-ink shadow-sm transition hover:-translate-y-1 hover:shadow-glow" aria-label="Social link">
+                <Icon />
+              </a>
+            ))}
+          </div>
       </div>
       <div className="border-t border-white/50 px-4 py-5 text-center text-sm font-semibold leading-7 text-slate-600 dark:border-white/10 dark:text-slate-200">
         © 2026 PastelNest Marketplace.<br />
-        Built by AXINEX TECHNOLOGIES.<br />
-        Frontend Developed by Sneha Suresh Tidke.<br />
+        Built by AXINEX TECHNOLOGIES.<br /> 
+        Frontend Developed by Sneha Tidke.<br />
         Crafted  for supporting small businesses.
       </div>
     </footer>
