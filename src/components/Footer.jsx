@@ -19,7 +19,7 @@ export default function Footer() {
             </span>
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-6 text-slate-600 dark:text-slate-200">
-            A premium Indian handmade marketplace for local artisans, handmade creators, and small businesses.
+            PastelNest is a creative handmade marketplace connecting talenfted artisans and small businesses with people who love unique handmade products.
           </p>
           <p className="mt-4 flex items-center gap-2 text-sm font-bold"><FiHeart className="text-rose-500" /> Crafted for supporting small businesses.</p>
         </div>
@@ -66,6 +66,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-rose-100 px-4 py-6 text-center text-sm font-semibold leading-7 text-slate-600 dark:border-white/10 dark:text-slate-200">
         © 2026 PastelNest Marketplace.<br />
+        All rights reserved. <br />
         Built by AXINEX TECHNOLOGIES
         <div className="mt-4 flex justify-center gap-3">
           {[FiGlobe, FiMail, FaLinkedin, FaInstagram].map((Icon, index) => (

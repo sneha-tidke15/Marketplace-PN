@@ -45,7 +45,7 @@ export default function Home() {
           {visibleCategories.map((category) => <CategoryCard key={category} category={category} />)}
         </div>
         <div className="mt-8 text-center">
-          <Link to="/shop" className="pill-button bg-ink text-white shadow-soft dark:bg-pastelPink dark:text-ink">View More Categories</Link>
+          <Link to="/shop" className="pill-button bg-ink text-white shadow-soft dark:bg-pastelPink dark:text-ink">Explore more</Link>
         </div>
       </section>
 
@@ -74,19 +74,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="container-soft py-14">
-        <SectionHeading eyebrow="Calendar" title="Festival shopping calendar" text="Plan handmade gifting around Indian festivals, family moments, and seasonal celebrations." />
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {festiveEvents.slice(0, 8).map((event) => (
-            <motion.div key={event.name} whileHover={{ y: -5 }} className="glass-card rounded-[24px] p-5">
-              <p className="text-xs font-black uppercase text-rose-500">{event.date}</p>
-              <h3 className="mt-2 text-xl font-black">{event.name}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">{event.offer}</p>
-            </motion.div>
-          ))}
         </div>
       </section>
 

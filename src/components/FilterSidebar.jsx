@@ -21,19 +21,26 @@ export default function FilterSidebar({ selectedCategory, setSelectedCategory, s
           </button>
         ))}
       </div>
-      <label className="mt-6 block text-sm font-bold">
-        Sort by
-        <select
-          value={sortBy}
-          onChange={(event) => setSortBy(event.target.value)}
-          className="mt-2 w-full rounded-2xl border-0 bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-        >
-          <option value="featured">Featured</option>
-          <option value="price-low">Price: Low to high</option>
-          <option value="price-high">Price: High to low</option>
-          <option value="rating">Top rated</option>
-        </select>
-      </label>
+      <label className="mt-6 block text-sm font-bold text-slate-700 dark:text-white">
+  Sort by
+
+  <div className="relative mt-2">
+    <select
+      value={sortBy}
+      onChange={(event) => setSortBy(event.target.value)}
+      className="w-full appearance-none rounded-2xl border border-rose-100 bg-white px-5 py-3 pr-12 font-semibold text-slate-700 shadow-md outline-none transition-all duration-300 hover:border-pink-300 hover:shadow-lg focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:border-white/10 dark:bg-[#2b2438] dark:text-white dark:focus:ring-pink-500/20"
+    >
+      <option value="featured">✨ Featured</option>
+      <option value="price-low">⬆️ Price: Low to high</option>
+      <option value="price-high">⬇️ Price: High to low</option>
+      <option value="rating">⭐ Top rated</option>
+    </select>
+
+    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-300">
+      ▼
+    </span>
+  </div>
+</label>
     </aside>
   );
 }

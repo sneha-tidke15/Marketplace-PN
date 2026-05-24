@@ -22,8 +22,10 @@ export default function HeroBanner() {
           <h1 className="mt-6 text-4xl font-black leading-tight sm:text-5xl lg:text-7xl">
             PASTELNEST
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-200">
-            Indian handmade products from small business owners, local artisans, and handmade creators, styled with a modern marketplace experience.
+          <h2>
+            Where Handmade Stories Come to Life.
+          </h2>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-200">Discover beautiful handmade creations crafted by passionate artisans and small business owners across India. From crochet art and clay creations to candles, jewelry, and cozy decor — every piece is made with creativity, warmth, and love.
           </p>
           <form onSubmit={submitSearch} className="mt-8 flex max-w-2xl flex-col gap-3 rounded-[30px] bg-white/80 p-2 shadow-soft sm:flex-row dark:bg-white/10">
             <label className="flex min-h-14 flex-1 items-center gap-3 px-4">

@@ -23,10 +23,11 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-rose-100 bg-[#fff8f0] shadow-sm dark:border-white/10 dark:bg-[#201c2a]">
       <nav className="container-soft flex h-20 items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-pastelPink via-[#ffe8c7] to-pastelBlue text-xl font-black shadow-soft">PN</span>
+          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-pink-100 via-[#ffe8c7] to-blue-100 text-[#7a4b5a] text-xl font-extrabold shadow-md border border-white/50">
+  PN
+</span>
           <span>
             <span className="block text-xl font-black leading-none">PastelNest</span>
-            <span className="hidden text-xs font-black text-rose-500 sm:block">Handmade with Love 💖</span>
           </span>
         </Link>
 

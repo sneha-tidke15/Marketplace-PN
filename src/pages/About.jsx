@@ -42,15 +42,43 @@ export default function About() {
         </div>
       </section>
       <section className="container-soft py-14">
-        <div className="grid gap-6 md:grid-cols-3">
-          {["Indian handmade products", "Local artisan visibility", "Modern marketplace trust"].map((mission) => (
-            <div key={mission} className="glass-card rounded-[24px] p-6">
-              <h2 className="text-2xl font-black">{mission}</h2>
-              <p className="mt-3 leading-7 text-slate-600 dark:text-slate-200">Premium layouts, verified seller stories, and responsive shopping flows built for handmade commerce.</p>
-            </div>
-          ))}
-        </div>
-      </section>
+  <div className="grid gap-6 md:grid-cols-3">
+
+    {/* CARD 1 */}
+    <div className="glass-card rounded-[24px] p-6">
+      <h2 className="text-2xl font-black">
+        Authentic Handmade Products
+      </h2>
+
+      <p className="mt-3 leading-7 text-slate-600 dark:text-slate-200">
+        Explore unique handmade creations crafted with love by talented local artisans across India.
+      </p>
+    </div>
+
+    {/* CARD 2 */}
+    <div className="glass-card rounded-[24px] p-6">
+      <h2 className="text-2xl font-black">
+        Empowering Small Businesses
+      </h2>
+
+      <p className="mt-3 leading-7 text-slate-600 dark:text-slate-200">
+        We help creative sellers showcase their handmade products and grow their businesses online.
+      </p>
+    </div>
+
+    {/* CARD 3 */}
+    <div className="glass-card rounded-[24px] p-6">
+      <h2 className="text-2xl font-black">
+        Trusted Shopping Experience
+      </h2>
+
+      <p className="mt-3 leading-7 text-slate-600 dark:text-slate-200">
+        Enjoy secure payments, smooth browsing, and a modern marketplace designed for handmade commerce.
+      </p>
+    </div>
+
+  </div>
+</section>
       <section className="container-soft py-14">
         <h2 className="mb-6 text-3xl font-black">Seller stories</h2>
         <div className="grid gap-6 md:grid-cols-3">{sellerStories.map((story) => <SellerCard key={story.name} story={story} />)}</div>

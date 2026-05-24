@@ -20,8 +20,15 @@ export default function ProductCard({ product, onQuickView }) {
         <div className="relative aspect-[4/5] overflow-hidden rounded-b-[30px]">
           <img src={product.images[0]} alt={product.title} loading="lazy" className="h-full w-full object-cover transition duration-500 hover:scale-110" />
           <div className="absolute left-4 top-4 flex flex-col gap-2">
-            {product.trend && <span className="rounded-full bg-pastelPink px-3 py-1 text-xs font-extrabold">Trending</span>}
-            <span className="rounded-full bg-mint px-3 py-1 text-xs font-extrabold">{product.discount}% off</span>
+            {product.trend && (
+              <span className="rounded-full bg-pink-200 px-3 py-1 text-xs font-extrabold text-pink-700 shadow-sm">
+                Trending
+              </span>
+            )}
+
+            <span className="rounded-full bg-green-200 px-3 py-1 text-xs font-extrabold text-green-800 shadow-sm">
+              {product.discount}% off
+            </span>
           </div>
           <div className="absolute right-4 top-4">
             <WishlistButton product={product} />

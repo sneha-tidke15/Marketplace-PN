@@ -17,7 +17,7 @@ export default function Contact() {
         <div className="rounded-[30px] bg-[#fff0df] p-8 shadow-soft dark:bg-white/10">
           <p className="text-sm font-black uppercase tracking-[0.22em] text-rose-500">Support</p>
           <h1 className="mt-4 text-4xl font-black md:text-6xl">Contact PastelNest</h1>
-          <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Get help with handmade returns, seller communication, delivery delays, payments, or custom product requests.</p>
+          <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Need help with orders, sellers, payments, or handmade customization requests? Our support team is here to assist you.</p>
           <div className="mt-6 grid gap-3">
             <p className="flex items-center gap-3 font-bold"><FiMail /> hello@pastelnest.com</p>
             <p className="flex items-center gap-3 font-bold"><FiPhone /> +91 98765 43210</p>
@@ -42,15 +42,65 @@ export default function Contact() {
         </form>
       </section>
       <section className="container-soft pb-14">
-        <div className="grid gap-4 md:grid-cols-5">
-          {queryTypes.map((query) => (
-            <div key={query} className="glass-card rounded-[22px] p-5">
-              <h2 className="font-black">{query}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">Our frontend demo routes this to the right PastelNest support flow.</p>
-            </div>
-          ))}
-        </div>
-      </section>
+  <div className="grid gap-4 md:grid-cols-5">
+
+    {/* CARD 1 */}
+    <div className="glass-card rounded-[22px] p-5">
+      <h2 className="font-black">
+        How to return a damaged product
+      </h2>
+
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">
+        If your product arrives damaged, you can request a return or replacement within 48 hours of delivery through your account or support form.
+      </p>
+    </div>
+
+    {/* CARD 2 */}
+    <div className="glass-card rounded-[22px] p-5">
+      <h2 className="font-black">
+        How to contact a seller
+      </h2>
+
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">
+        Customers can directly contact sellers for product details, customization requests, and order-related queries through the marketplace support system.
+      </p>
+    </div>
+
+    {/* CARD 3 */}
+    <div className="glass-card rounded-[22px] p-5">
+      <h2 className="font-black">
+        Delivery delay support
+      </h2>
+
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">
+        Facing delivery delays? Our support team will help you track your order and provide updates as quickly as possible.
+      </p>
+    </div>
+
+    {/* CARD 4 */}
+    <div className="glass-card rounded-[22px] p-5">
+      <h2 className="font-black">
+        Payment issues
+      </h2>
+
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">
+        For payment failures, refunds, or transaction-related problems, contact our support team for quick assistance and secure resolution.
+      </p>
+    </div>
+
+    {/* CARD 5 */}
+    <div className="glass-card rounded-[22px] p-5">
+      <h2 className="font-black">
+        Handmade customization queries
+      </h2>
+
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">
+        Need personalized handmade products? Connect with sellers to discuss custom colors, designs, sizes, and special requests.
+      </p>
+    </div>
+
+  </div>
+</section>
     </PageTransition>
   );
 }
