@@ -1,23 +1,30 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { products } from "../data/products";
+import { categories, products } from "../data/products";
 
 const ShopContext = createContext();
 
 export function ShopProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [sellerProducts, setSellerProducts] = useState(() => JSON.parse(localStorage.getItem("akriti-seller-products") || "[]"));
+  const [sellerCategories, setSellerCategories] = useState(() => JSON.parse(localStorage.getItem("akriti-seller-categories") || "[]"));
+  const [reviews, setReviews] = useState(() => JSON.parse(localStorage.getItem("akriti-reviews") || "{}"));
+  const [orders] = useState(() => JSON.parse(localStorage.getItem("akriti-orders") || JSON.stringify([
+    { id: "AK-1008", productId: 3, status: "Shipped", payment: "UPI", expectedDelivery: "27 May 2026" },
+    { id: "AK-0996", productId: 6, status: "Delivered", payment: "Card", deliveredAt: "15 May 2026" }
+  ])));
   const [darkMode, setDarkMode] = useState(false);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [notifications, setNotifications] = useState(() => {
-    const saved = localStorage.getItem("pastelnest-notifications");
+    const saved = localStorage.getItem("akriti-notifications");
     return saved ? JSON.parse(saved) : [
-      { id: "n1", role: "customer", text: "Welcome to PastelNest. Track handmade orders here.", read: false },
+      { id: "n1", role: "customer", text: "Welcome to Akriti. Track handmade orders here.", read: false },
       { id: "n2", role: "seller", text: "New order notifications will appear in your seller studio.", read: false }
     ];
   });
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("pastelnest-user");
+    const savedUser = localStorage.getItem("akriti-user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
@@ -29,15 +36,27 @@ export function ShopProvider({ children }) {
   // Persist fake frontend authentication so refreshes keep the user logged in.
   useEffect(() => {
     if (user) {
-      localStorage.setItem("pastelnest-user", JSON.stringify(user));
+      localStorage.setItem("akriti-user", JSON.stringify(user));
     } else {
-      localStorage.removeItem("pastelnest-user");
+      localStorage.removeItem("akriti-user");
     }
   }, [user]);
 
   useEffect(() => {
-    localStorage.setItem("pastelnest-notifications", JSON.stringify(notifications));
+    localStorage.setItem("akriti-notifications", JSON.stringify(notifications));
   }, [notifications]);
+
+  useEffect(() => {
+    localStorage.setItem("akriti-seller-products", JSON.stringify(sellerProducts));
+  }, [sellerProducts]);
+
+  useEffect(() => {
+    localStorage.setItem("akriti-seller-categories", JSON.stringify(sellerCategories));
+  }, [sellerCategories]);
+
+  useEffect(() => {
+    localStorage.setItem("akriti-reviews", JSON.stringify(reviews));
+  }, [reviews]);
 
   const showToast = useCallback((message) => {
     toast(message, {
@@ -82,8 +101,10 @@ export function ShopProvider({ children }) {
     return true;
   };
 
-  const getAccounts = () => JSON.parse(localStorage.getItem("pastelnest-accounts") || "[]");
-  const saveAccounts = (accounts) => localStorage.setItem("pastelnest-accounts", JSON.stringify(accounts));
+  const getAccounts = () => JSON.parse(localStorage.getItem("akriti-accounts") || "[]");
+  const saveAccounts = (accounts) => localStorage.setItem("akriti-accounts", JSON.stringify(accounts));
+  const getPendingOtps = () => JSON.parse(localStorage.getItem("akriti-pending-otps") || "{}");
+  const savePendingOtps = (otps) => localStorage.setItem("akriti-pending-otps", JSON.stringify(otps));
 
   const addNotification = (role, text) => {
     setNotifications((items) => [{ id: `n-${Date.now()}`, role, text, read: false }, ...items].slice(0, 12));
@@ -134,6 +155,47 @@ export function ShopProvider({ children }) {
     return true;
   };
 
+  const requestOtp = (account) => {
+    const role = account.role || "customer";
+    const accounts = getAccounts();
+    const emailExists = accounts.some((item) => item.email?.toLowerCase() === account.email?.toLowerCase());
+    const phoneExists = accounts.some((item) => item.phone === account.phone);
+    if (emailExists || phoneExists) {
+      showToast(emailExists ? "Email already registered" : "Mobile number already registered");
+      return null;
+    }
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const key = account.email?.toLowerCase() || account.phone;
+    const pending = getPendingOtps();
+    pending[key] = { account: { ...account, role }, code, expiresAt: Date.now() + 5 * 60 * 1000 };
+    savePendingOtps(pending);
+    showToast(`OTP sent: ${code}`);
+    return code;
+  };
+
+  const verifyOtpAndRegister = ({ email, phone, otp }) => {
+    const key = email?.toLowerCase() || phone;
+    const pending = getPendingOtps();
+    const entry = pending[key];
+    if (!entry) {
+      showToast("Please request OTP first");
+      return false;
+    }
+    if (Date.now() > entry.expiresAt) {
+      delete pending[key];
+      savePendingOtps(pending);
+      showToast("OTP expired. Please resend OTP");
+      return false;
+    }
+    if (entry.code !== otp) {
+      showToast("Invalid OTP");
+      return false;
+    }
+    delete pending[key];
+    savePendingOtps(pending);
+    return register(entry.account);
+  };
+
   const register = (account) => {
     const role = account.role || "customer";
     const accounts = getAccounts();
@@ -151,6 +213,49 @@ export function ShopProvider({ children }) {
     return true;
   };
 
+  const addSellerCategory = ({ name, description }) => {
+    const normalized = name.trim().toLowerCase();
+    if (!normalized) {
+      showToast("Category name is required");
+      return false;
+    }
+    if ([...sellerCategories, ...products.map((product) => ({ name: product.category }))].some((item) => item.name === normalized || item === normalized)) {
+      showToast("Category already exists");
+      return false;
+    }
+    setSellerCategories((items) => [...items, { id: `cat-${Date.now()}`, name: normalized, description }]);
+    showToast("Category created");
+    return true;
+  };
+
+  const addSellerProduct = (product) => {
+    const savedProduct = {
+      ...product,
+      id: `seller-${Date.now()}`,
+      price: Number(product.price || product.basePrice || 0),
+      rating: 0,
+      reviews: [],
+      trend: false,
+      discount: Number(product.discount || 0)
+    };
+    setSellerProducts((items) => [savedProduct, ...items]);
+    addNotification("seller", `${product.title} saved as a seller product`);
+    showToast("Product saved successfully");
+    return savedProduct;
+  };
+
+  const addReview = ({ productId, rating, text }) => {
+    const delivered = orders.some((order) => Number(order.productId) === Number(productId) && order.status === "Delivered");
+    if (!delivered) {
+      showToast("Reviews are available after successful delivery");
+      return false;
+    }
+    const review = { user: user?.name || "Customer", rating: Number(rating), text, createdAt: new Date().toISOString() };
+    setReviews((items) => ({ ...items, [productId]: [review, ...(items[productId] || [])] }));
+    showToast("Thanks for your feedback");
+    return true;
+  };
+
   const logout = () => {
     setUser(null);
     setWishlist([]);
@@ -163,7 +268,13 @@ export function ShopProvider({ children }) {
   );
 
   const value = {
-    products,
+    products: [...sellerProducts, ...products],
+    baseProducts: products,
+    categories: [...new Set([...categories, ...sellerCategories.map((category) => category.name)])],
+    sellerCategories,
+    sellerProducts,
+    reviews,
+    orders,
     cart,
     wishlist,
     darkMode,
@@ -185,13 +296,19 @@ export function ShopProvider({ children }) {
     addRecentlyViewed,
     login,
     register,
+    requestOtp,
+    verifyOtpAndRegister,
     logout,
     notifications,
-    addNotification
+    addNotification,
+    addSellerCategory,
+    addSellerProduct,
+    addReview
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 }
+
 
 export function useShop() {
   return useContext(ShopContext);

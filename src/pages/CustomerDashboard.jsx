@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import DashboardSidebar from "../components/DashboardSidebar";
 import PageTransition from "../components/PageTransition";
 import ProductCard from "../components/ProductCard";
@@ -34,17 +35,17 @@ export default function CustomerDashboard() {
             <div className="mt-5 grid gap-4">
               <div className="rounded-2xl bg-white/60 p-4 dark:bg-white/10">
                 <div className="flex flex-wrap justify-between gap-3">
-                  <span className="font-black">PN-1008</span>
+                  <span className="font-black">AK-1008</span>
                   <span className="font-bold">Payment: UPI</span>
                   <span className="font-bold">Expected delivery: 27 May 2026</span>
-                  <span className="font-bold">Invoice: INV-PN-1008</span>
+                  <span className="font-bold">Invoice: INV-AK-1008</span>
                 </div>
                 <div className="mt-5 grid gap-3 md:grid-cols-5">
                   {stages.map((stage, index) => <div key={stage} className={`rounded-2xl p-3 text-center text-xs font-black ${index < 4 ? "bg-mint text-ink" : "bg-white/70 dark:bg-white/10"}`}>{stage}</div>)}
                 </div>
               </div>
               <div className="rounded-2xl bg-white/60 p-4 dark:bg-white/10">
-                <div className="flex flex-wrap items-center justify-between gap-3"><span className="font-black">PN-0996</span><span>Delivered: 15 May 2026</span><button className="pill-button bg-pastelPink px-4 py-2 text-ink">Give Feedback</button></div>
+                <div className="flex flex-wrap items-center justify-between gap-3"><span className="font-black">AK-0996</span><span>Delivered: 15 May 2026</span><Link to="/product/6" className="pill-button bg-pastelPink px-4 py-2 text-ink">Give Feedback</Link></div>
               </div>
             </div>
           </div>

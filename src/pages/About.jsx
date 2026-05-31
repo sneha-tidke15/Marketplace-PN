@@ -2,11 +2,14 @@ import { motion } from "framer-motion";
 import PageTransition from "../components/PageTransition";
 import SellerCard from "../components/SellerCard";
 import { sellerStories } from "../data/products";
+import about1 from "../assets/about1.png";
+import about2 from "../assets/about2.png";
+import about3 from "../assets/about3.png";
 
 const visuals = [
-  "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=900&q=80",
-  "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=900&q=80"
+  about1,
+  about2,
+  about3
 ];
 
 export default function About() {
@@ -15,12 +18,12 @@ export default function About() {
       <section className="pastel-gradient py-16">
         <div className="container-soft grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.24em] text-rose-500">About PastelNest</p>
-            <h1 className="mt-4 text-4xl font-black leading-tight md:text-6xl">Welcome to PastelNest</h1>
+            <p className="text-sm font-black uppercase tracking-[0.24em] text-rose-500">About Akriti</p>
+            <h1 className="mt-4 text-4xl font-black leading-tight md:text-6xl">Welcome to Akriti</h1>
             <div className="mt-6 space-y-5 text-lg leading-8 text-slate-700 dark:text-slate-100">
-              <p>Welcome to PastelNest — a creative marketplace where handmade artistry meets modern shopping.</p>
+              <p>Welcome to Akriti, a creative marketplace where handmade artistry meets modern shopping.</p>
               <p>Our platform is specially designed for talented small business owners and artisans who create beautiful handmade products such as clay art, crochet items, candles, jewelry, and home decor. We believe every handmade product carries creativity, passion, and a personal touch that makes it truly special.</p>
-              <p>✨ Handmade with love<br />✨ Crafted by talented artisans<br />✨ Designed to support small businesses</p>
+              <p>Designed in Bharat<br />Crafted by talented artisans<br />Built to support small businesses</p>
               <p>Join us in celebrating creativity, craftsmanship, and the beauty of handmade products.</p>
             </div>
           </div>

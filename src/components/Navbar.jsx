@@ -24,10 +24,10 @@ export default function Navbar() {
       <nav className="container-soft flex h-20 items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
           <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-pink-100 via-[#ffe8c7] to-blue-100 text-[#7a4b5a] text-xl font-extrabold shadow-md border border-white/50">
-  PN
+  AK
 </span>
           <span>
-            <span className="block text-xl font-black leading-none">PastelNest</span>
+            <span className="block text-xl font-black leading-none">Akriti</span>
           </span>
         </Link>
 
@@ -58,7 +58,7 @@ export default function Navbar() {
           </div>
           {user && <Link title="Account dashboard" to={user.role === "seller" ? "/seller-dashboard" : "/customer-dashboard"} className="hidden h-11 w-11 place-items-center rounded-full bg-white shadow-sm dark:bg-white/10 dark:text-white sm:grid lg:hidden" aria-label="Account dashboard"><FiUser /></Link>}
           {isCustomer && (
-            <Link title="View Wishlist" to="/customer-dashboard" className="relative hidden h-11 w-11 place-items-center rounded-full bg-white shadow-sm dark:bg-white/10 dark:text-white sm:grid" aria-label="Wishlist">
+            <Link title="View Wishlist" to="/account/wishlist" className="relative hidden h-11 w-11 place-items-center rounded-full bg-white shadow-sm dark:bg-white/10 dark:text-white sm:grid" aria-label="Wishlist">
               <FiHeart />
               {wishlist.length > 0 && <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-rose-500 text-[10px] font-black text-white">{wishlist.length}</span>}
             </Link>

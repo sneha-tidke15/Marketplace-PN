@@ -37,7 +37,7 @@ export default function SellerLogin() {
             ))}
           </div>
         </div>
-        <AuthCard title="Seller Login" subtitle="Use your seller email to continue to the PastelNest studio.">
+        <AuthCard title="Seller Login" subtitle="Use your seller email to continue to the Akriti studio.">
           <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
             <InputField label="Email" type="email" value={form.email} error={errors.email} onChange={(event) => setForm({ ...form, email: event.target.value })} />
             <PasswordInput label="Password" value={form.password} error={errors.password} onChange={(event) => setForm({ ...form, password: event.target.value })} />

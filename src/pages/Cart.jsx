@@ -1,4 +1,4 @@
-import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiMinus, FiPlus, FiShoppingBag, FiTrash2 } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import PageTransition from "../components/PageTransition";
 import { useShop } from "../context/ShopContext";
@@ -14,7 +14,7 @@ export default function Cart() {
         <h1 className="text-4xl font-black">Your cart</h1>
         {!cart.length ? (
           <div className="glass-card pastel-gradient mt-8 rounded-[32px] p-10 text-center">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-white/70 text-3xl shadow-soft dark:bg-white/10">🛍️</div>
+            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-white/70 text-3xl shadow-soft dark:bg-white/10"><FiShoppingBag /></div>
             <p className="mt-5 text-2xl font-black">Your cart is waiting for something cute.</p>
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-200">Login and add handmade pieces from verified small businesses when you are ready.</p>
             <Link to="/shop" className="pill-button mt-6 bg-ink text-white dark:bg-pastelPink dark:text-ink">Browse products</Link>

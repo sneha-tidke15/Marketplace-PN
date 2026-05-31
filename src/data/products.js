@@ -1,3 +1,7 @@
+import resinCoasters from "../assets/resin.png";
+import toteCharm from "../assets/totebag.png";
+import trinketTray from "../assets/tray.png";
+
 export const categories = [
   "crochet",
   "clay art",
@@ -113,7 +117,7 @@ export const products = [
     eventTags: ["Mother's Day", "Handmade Gifts"],
     description: "Hand-shaped air-dry clay tray with a glossy finish for rings, earrings, and tiny keepsakes.",
     images: [
-      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=900&q=80",
+      trinketTray,
       "https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?auto=format&fit=crop&w=900&q=80"
     ],
     colors: ["Blush", "Lilac", "Ivory"],
@@ -206,7 +210,7 @@ export const products = [
     eventTags: ["Housewarming", "Wedding Season"],
     description: "Clear resin coaster set with pressed flowers and gold flakes for premium handmade gifting.",
     images: [
-      "https://images.unsplash.com/photo-1607344645866-009c320f2133?auto=format&fit=crop&w=900&q=80",
+      resinCoasters,
       "https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?auto=format&fit=crop&w=900&q=80"
     ],
     colors: ["Clear Gold", "Pink Bloom", "Blue Bloom"],
@@ -268,7 +272,7 @@ export const products = [
     eventTags: ["Friendship Day", "Handmade Gifts"],
     description: "A soft crochet daisy charm for totes, backpacks, and keys.",
     images: [
-      "https://images.unsplash.com/photo-1613843351058-1dd06fda7c80?auto=format&fit=crop&w=900&q=80",
+      toteCharm,
       "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=900&q=80"
     ],
     colors: ["Daisy", "Sunflower", "Rose"],
@@ -431,7 +435,7 @@ export const sellers = Array.from(
 );
 
 export const testimonials = [
-  { name: "Aarohi", role: "Customer", text: "PastelNest makes discovering handmade gifts feel joyful and personal.", rating: 5, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80" },
+  { name: "Aarohi", role: "Customer", text: "Akriti makes discovering handmade gifts feel joyful and personal.", rating: 5, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80" },
   { name: "Saanvi", role: "Seller", text: "The seller dashboard feels simple enough for a small business owner to manage daily.", rating: 5, image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=300&q=80" },
   { name: "Priya", role: "Customer", text: "A premium shopping experience with useful product details and maker stories.", rating: 4.7, image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80" }
 ];

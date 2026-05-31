@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaInstagram } from "react-icons/fa";
 import { FiCheckCircle, FiGlobe, FiRefreshCw, FiShoppingBag, FiTruck, FiVideo, FiZap } from "react-icons/fi";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -14,8 +14,9 @@ import { slugifySeller } from "../data/products";
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { products, addToCart, addRecentlyViewed, isCustomer, showToast } = useShop();
-  const product = products.find((item) => item.id === Number(id));
+  const { products, addToCart, addRecentlyViewed, isCustomer, showToast, addReview, reviews, orders } = useShop();
+  const product = products.find((item) => String(item.id) === String(id));
+  const [reviewForm, setReviewForm] = useState({ rating: 5, text: "" });
 
   useEffect(() => {
     if (product) addRecentlyViewed(product);
@@ -23,7 +24,9 @@ export default function ProductDetails() {
 
   if (!product) return <div className="container-soft py-20 text-center font-black">Product not found.</div>;
 
-  const related = products.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 3);
+  const related = products.filter((item) => item.category === product.category && String(item.id) !== String(product.id)).slice(0, 3);
+  const productReviews = [...(reviews[product.id] || []), ...(product.reviews || [])];
+  const canReview = orders.some((order) => Number(order.productId) === Number(product.id) && order.status === "Delivered");
 
   const handleAddToCart = () => {
     if (!isCustomer) {
@@ -106,8 +109,29 @@ export default function ProductDetails() {
 
       <section className="container-soft py-10">
         <h2 className="mb-5 text-3xl font-black">Reviews</h2>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!reviewForm.text.trim()) {
+              showToast("Please add a review comment");
+              return;
+            }
+            if (addReview({ productId: product.id, rating: reviewForm.rating, text: reviewForm.text })) {
+              setReviewForm({ rating: 5, text: "" });
+            }
+          }}
+          className="glass-card mb-6 rounded-[28px] p-5"
+        >
+          <div className="grid gap-4 md:grid-cols-[180px_1fr_auto]">
+            <select disabled={!canReview} value={reviewForm.rating} onChange={(event) => setReviewForm({ ...reviewForm, rating: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none disabled:opacity-60 dark:bg-white/10">
+              {[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value} stars</option>)}
+            </select>
+            <input disabled={!canReview} value={reviewForm.text} onChange={(event) => setReviewForm({ ...reviewForm, text: event.target.value })} placeholder={canReview ? "Share feedback after delivery" : "Reviews unlock after successful delivery"} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none disabled:opacity-60 dark:bg-white/10" />
+            <button disabled={!canReview} className="pill-button bg-ink text-white disabled:opacity-60 dark:bg-pastelPink dark:text-ink">Submit review</button>
+          </div>
+        </form>
         <div className="grid gap-5 md:grid-cols-3">
-          {product.reviews.map((review) => <ReviewCard key={review.user} review={review} highlight={review.rating > 3.5} />)}
+          {productReviews.map((review, index) => <ReviewCard key={`${review.user}-${index}`} review={review} highlight={review.rating > 3.5} />)}
         </div>
       </section>
 

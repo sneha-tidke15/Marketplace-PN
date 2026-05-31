@@ -18,10 +18,10 @@ export default function StartupLoader() {
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
           className="text-4xl font-black md:text-6xl"
         >
-          PASTELNEST
+          AKRITI
         </motion.h1>
         <motion.p animate={{ opacity: [0.65, 1, 0.65] }} transition={{ duration: 2, repeat: Infinity }} className="mt-4 text-lg font-extrabold text-rose-500">
-          Handmade with Love 💖
+          Designed in Bharat
         </motion.p>
       </motion.div>
     </motion.div>

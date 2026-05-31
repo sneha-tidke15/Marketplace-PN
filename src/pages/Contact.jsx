@@ -16,10 +16,10 @@ export default function Contact() {
       <section className="container-soft grid gap-8 py-12 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="rounded-[30px] bg-[#fff0df] p-8 shadow-soft dark:bg-white/10">
           <p className="text-sm font-black uppercase tracking-[0.22em] text-rose-500">Support</p>
-          <h1 className="mt-4 text-4xl font-black md:text-6xl">Contact PastelNest</h1>
+          <h1 className="mt-4 text-4xl font-black md:text-6xl">Contact Akriti</h1>
           <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Need help with orders, sellers, payments, or handmade customization requests? Our support team is here to assist you.</p>
           <div className="mt-6 grid gap-3">
-            <p className="flex items-center gap-3 font-bold"><FiMail /> hello@pastelnest.com</p>
+            <p className="flex items-center gap-3 font-bold"><FiMail /> hello@akriti.com</p>
             <p className="flex items-center gap-3 font-bold"><FiPhone /> +91 98765 43210</p>
             <p className="flex items-center gap-3 font-bold"><FiMapPin /> Pune, Maharashtra</p>
           </div>

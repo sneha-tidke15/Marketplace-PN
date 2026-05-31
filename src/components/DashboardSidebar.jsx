@@ -1,6 +1,6 @@
-import { FiBarChart2, FiBell, FiBox, FiHome, FiSettings, FiShoppingBag, FiUsers } from "react-icons/fi";
+import { FiBarChart2, FiBell, FiBox, FiGrid, FiHome, FiPlusCircle, FiSettings, FiShoppingBag, FiUsers } from "react-icons/fi";
 
-const iconMap = { overview: FiHome, products: FiBox, orders: FiShoppingBag, analytics: FiBarChart2, users: FiUsers, notifications: FiBell, settings: FiSettings };
+const iconMap = { overview: FiHome, dashboard: FiHome, products: FiBox, orders: FiShoppingBag, analytics: FiBarChart2, customers: FiUsers, inventory: FiBox, "add-product": FiPlusCircle, categories: FiGrid, users: FiUsers, notifications: FiBell, settings: FiSettings };
 
 export default function DashboardSidebar({ title, items, active, setActive }) {
   return (

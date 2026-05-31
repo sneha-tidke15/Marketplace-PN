@@ -2,6 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import About from "./pages/About";
+import { AddressesPage, OrdersPage, ProfilePage, WishlistPage } from "./pages/AccountPages";
 import AdminDashboard from "./pages/AdminDashboard";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
@@ -39,6 +40,10 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/seller-dashboard" element={<ProtectedRoute role="seller"><SellerDashboard /></ProtectedRoute>} />
           <Route path="/customer-dashboard" element={<ProtectedRoute role="customer"><CustomerDashboard /></ProtectedRoute>} />
+          <Route path="/account/orders" element={<ProtectedRoute role="customer"><OrdersPage /></ProtectedRoute>} />
+          <Route path="/account/wishlist" element={<ProtectedRoute role="customer"><WishlistPage /></ProtectedRoute>} />
+          <Route path="/account/addresses" element={<ProtectedRoute role="customer"><AddressesPage /></ProtectedRoute>} />
+          <Route path="/account/profile" element={<ProtectedRoute role="customer"><ProfilePage /></ProtectedRoute>} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

@@ -19,6 +19,11 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setSearch(params.get("search") || "");
+    setSelectedCategory(params.get("category") || "all");
+  }, [params]);
+
+  useEffect(() => {
     setLoading(true);
     const timer = window.setTimeout(() => setLoading(false), 650);
     return () => window.clearTimeout(timer);

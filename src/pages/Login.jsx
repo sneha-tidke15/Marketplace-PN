@@ -29,7 +29,7 @@ export default function Login() {
       <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
         <div className="rounded-[38px] bg-white/45 p-8 backdrop-blur dark:bg-white/10">
           <span className="rounded-full bg-pastelPink px-4 py-2 text-sm font-black text-rose-600">Customer access</span>
-          <h1 className="mt-5 text-5xl font-black">Welcome back to PastelNest</h1>
+          <h1 className="mt-5 text-5xl font-black">Welcome back to Akriti</h1>
           <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Login to save favorites, track handmade orders, and keep supporting small businesses.</p>
           <div className="mt-7 grid gap-4 sm:grid-cols-2">
             <div className="glass-card rounded-[24px] p-5"><FiHeart className="text-2xl text-rose-500" /><p className="mt-3 font-black">Wishlist favorites</p></div>

@@ -8,15 +8,17 @@ import PasswordInput from "../components/auth/PasswordInput";
 import { useShop } from "../context/ShopContext";
 
 export default function SellerRegister() {
-  const { register, showToast } = useShop();
+  const { requestOtp, verifyOtpAndRegister, showToast } = useShop();
   const navigate = useNavigate();
   const [form, setForm] = useState({ shopName: "", ownerName: "", email: "", phone: "", password: "", confirmPassword: "", description: "", socials: "" });
+  const [otp, setOtp] = useState("");
+  const [otpRequested, setOtpRequested] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   const update = (field, value) => setForm({ ...form, [field]: value });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const validate = () => {
     const nextErrors = {};
     if (!form.shopName.trim()) nextErrors.shopName = "Shop name is required";
     if (!form.ownerName.trim()) nextErrors.ownerName = "Owner name is required";
@@ -26,10 +28,39 @@ export default function SellerRegister() {
     if (form.confirmPassword !== form.password) nextErrors.confirmPassword = "Passwords do not match";
     if (!form.description.trim()) nextErrors.description = "Describe your handmade shop";
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length) return;
-    if (register({ name: form.ownerName, shopName: form.shopName, email: form.email, phone: form.phone, password: form.password, description: form.description, socials: form.socials, role: "seller" })) {
-      navigate("/seller-dashboard");
+    return !Object.keys(nextErrors).length;
+  };
+
+  const account = { name: form.ownerName, shopName: form.shopName, email: form.email, phone: form.phone, password: form.password, description: form.description, socials: form.socials, role: "seller" };
+
+  const handleRequestOtp = () => {
+    if (!validate()) return;
+    setLoading(true);
+    window.setTimeout(() => {
+      const sent = requestOtp(account);
+      setOtpRequested(Boolean(sent));
+      setLoading(false);
+    }, 450);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!otpRequested) {
+      handleRequestOtp();
+      return;
     }
+    if (otp.length !== 6) {
+      setErrors({ otp: "Enter the 6 digit OTP" });
+      return;
+    }
+    setLoading(true);
+    window.setTimeout(() => {
+      const verified = verifyOtpAndRegister({ email: form.email, phone: form.phone, otp });
+      setLoading(false);
+      if (verified) {
+      navigate("/seller-dashboard");
+      }
+    }, 450);
   };
 
   return (
@@ -64,7 +95,13 @@ export default function SellerRegister() {
             </div>
             <InputField label="Shop Description" as="textarea" rows="4" value={form.description} error={errors.description} onChange={(event) => update("description", event.target.value)} />
             <InputField label="Social Media Links" placeholder="Instagram, website, Facebook..." value={form.socials} onChange={(event) => update("socials", event.target.value)} />
-            <button className="pill-button bg-gradient-to-r from-pastelPink via-lavender to-pastelBlue text-ink hover:scale-[1.02]"><FiStar /> Create seller shop</button>
+            {otpRequested && (
+              <div>
+                <InputField label="OTP Verification" value={otp} error={errors.otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, "").slice(0, 6))} />
+                <button type="button" onClick={handleRequestOtp} className="mt-2 text-sm font-black text-rose-500">Resend OTP</button>
+              </div>
+            )}
+            <button disabled={loading} className="pill-button bg-gradient-to-r from-pastelPink via-lavender to-pastelBlue text-ink hover:scale-[1.02] disabled:opacity-60"><FiStar /> {loading ? "Please wait..." : otpRequested ? "Verify and create shop" : "Send OTP"}</button>
           </form>
           <p className="mt-6 text-center text-sm font-semibold">Already selling? <Link to="/seller-login" className="text-rose-500">Seller login</Link></p>
         </AuthCard>
