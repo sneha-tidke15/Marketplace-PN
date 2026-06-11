@@ -1,5 +1,6 @@
-import { FiHeart, FiHome, FiPackage, FiShoppingBag, FiUser } from "react-icons/fi";
+import { FiHeart, FiHome, FiShoppingBag, FiUser } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
+import OrderHistory from "../components/OrderHistory";
 import PageTransition from "../components/PageTransition";
 import ProductCard from "../components/ProductCard";
 import { useShop } from "../context/ShopContext";
@@ -21,7 +22,7 @@ function AccountShell({ title, children }) {
             {accountLinks.map((item) => {
               const Icon = item.icon;
               return (
-                <NavLink key={item.to} to={item.to} className={({ isActive }) => `flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition ${isActive ? "bg-ink text-white dark:bg-pastelPink dark:text-ink" : "bg-white/55 hover:bg-pastelBlue dark:bg-white/10"}`}>
+                <NavLink key={item.to} to={item.to} className={({ isActive }) => `flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition ${isActive ? "bg-ink text-white" : "bg-white/55 hover:bg-pastelBlue"}`}>
                   <Icon /> {item.label}
                 </NavLink>
               );
@@ -38,29 +39,9 @@ function AccountShell({ title, children }) {
 }
 
 export function OrdersPage() {
-  const { orders } = useShop();
-  const stages = ["Order Placed", "Packed", "Shipped", "Out for Delivery", "Delivered"];
-
   return (
     <AccountShell title="Orders">
-      <div className="grid gap-4">
-        {orders.length ? orders.map((order) => (
-          <div key={order.id} className="glass-card rounded-[30px] p-6">
-            <div className="flex flex-wrap justify-between gap-3">
-              <span className="font-black">{order.id}</span>
-              <span className="font-bold">Payment: {order.payment}</span>
-              <span className="font-bold">{order.deliveredAt ? `Delivered: ${order.deliveredAt}` : `Expected delivery: ${order.expectedDelivery}`}</span>
-            </div>
-            <div className="mt-5 grid gap-3 md:grid-cols-5">
-              {stages.map((stage) => {
-                const activeIndex = stages.indexOf(order.status);
-                const index = stages.indexOf(stage);
-                return <div key={stage} className={`rounded-2xl p-3 text-center text-xs font-black ${index <= activeIndex ? "bg-mint text-ink" : "bg-white/70 dark:bg-white/10"}`}>{stage}</div>;
-              })}
-            </div>
-          </div>
-        )) : <EmptyState icon={FiPackage} title="No orders yet." text="Your handmade orders will appear here after checkout." />}
-      </div>
+      <OrderHistory />
     </AccountShell>
   );
 }
@@ -85,9 +66,9 @@ export function AddressesPage() {
       <div className="glass-card rounded-[30px] p-6">
         <h2 className="text-2xl font-black">Saved address</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
-          <input placeholder="Name" defaultValue={user?.name || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-          <input placeholder="Mobile" defaultValue={user?.phone || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-          <input placeholder="Address" defaultValue={user?.address || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10 md:col-span-2" />
+          <input placeholder="Name" defaultValue={user?.name || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input placeholder="Mobile" defaultValue={user?.phone || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input placeholder="Address" defaultValue={user?.address || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none md:col-span-2" />
         </div>
       </div>
     </AccountShell>
@@ -102,10 +83,10 @@ export function ProfilePage() {
       <div className="glass-card rounded-[30px] p-6">
         <h2 className="text-2xl font-black">Profile details</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
-          <input placeholder="Name" defaultValue={user?.name || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-          <input placeholder="Email" defaultValue={user?.email || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-          <input placeholder="Mobile" defaultValue={user?.phone || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-          <input placeholder="Role" defaultValue={user?.role || "customer"} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold capitalize outline-none dark:bg-white/10" />
+          <input placeholder="Name" defaultValue={user?.name || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input placeholder="Email" defaultValue={user?.email || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input placeholder="Mobile" defaultValue={user?.phone || ""} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input placeholder="Role" defaultValue={user?.role || "customer"} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold capitalize outline-none" />
         </div>
       </div>
     </AccountShell>
@@ -117,7 +98,7 @@ function EmptyState({ icon: Icon, title, text }) {
     <div className="glass-card rounded-[28px] p-8 text-center">
       <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-pastelPink text-2xl text-ink"><Icon /></div>
       <p className="mt-5 text-2xl font-black">{title}</p>
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-200">{text}</p>
+      <p className="mt-2 text-sm text-slate-600">{text}</p>
     </div>
   );
 }

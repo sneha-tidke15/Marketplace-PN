@@ -12,21 +12,21 @@ export default function ProductCard({ product, onQuickView }) {
   return (
     <motion.article
       layout
-      whileHover={{ y: -8, scale: 1.02 }}
+      whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      className="glass-card shine-card overflow-hidden rounded-[28px]"
+      className="glass-card shine-card marketplace-card overflow-hidden rounded-[20px]"
     >
       <Link to={`/product/${product.id}`} className="block">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-b-[30px]">
-          <img src={product.images[0]} alt={product.title} loading="lazy" className="h-full w-full object-cover transition duration-500 hover:scale-110" />
+        <div className="relative aspect-[4/5] overflow-hidden rounded-b-[20px]">
+          <img src={product.images[0]} alt={product.title} loading="lazy" className="h-full w-full object-cover transition duration-500 hover:-translate-y-1" />
           <div className="absolute left-4 top-4 flex flex-col gap-2">
             {product.trend && (
-              <span className="rounded-full bg-pink-200 px-3 py-1 text-xs font-extrabold text-pink-700 shadow-sm">
+              <span className="rounded-full bg-secondary px-3 py-1 text-xs font-extrabold text-text-primary shadow-sm">
                 Trending
               </span>
             )}
 
-            <span className="rounded-full bg-green-200 px-3 py-1 text-xs font-extrabold text-green-800 shadow-sm">
+            <span className="rounded-full bg-secondary-light px-3 py-1 text-xs font-extrabold text-text-primary shadow-sm">
               {product.discount}% off
             </span>
           </div>
@@ -38,20 +38,20 @@ export default function ProductCard({ product, onQuickView }) {
 
       <div className="space-y-3 p-5">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-rose-400">{product.category}</p>
-          <Link to={`/product/${product.id}`} className="mt-1 block text-lg font-extrabold hover:text-rose-500">
+          <p className="text-xs font-bold uppercase tracking-wide text-accent">{product.category}</p>
+          <Link to={`/product/${product.id}`} className="mt-1 block text-lg font-extrabold hover:text-primary">
             {product.title}
           </Link>
         </div>
         <RatingStars rating={product.rating} />
         <div className="flex items-center justify-between gap-3">
-          <p className="text-xl font-black">₹{product.price}</p>
+          <p className="text-xl font-black text-primary">₹{product.price}</p>
           <div className="flex gap-2">
             <button
               type="button"
               title="View Product"
               onClick={() => onQuickView(product)}
-              className="grid h-10 w-10 place-items-center rounded-full bg-pastelBlue text-ink transition hover:scale-105"
+              className="grid h-10 w-10 place-items-center rounded-full bg-pastelBlue text-ink transition hover:-translate-y-1"
               aria-label="Quick view"
             >
               <FiEye />
@@ -67,7 +67,7 @@ export default function ProductCard({ product, onQuickView }) {
                 }
                 addToCart(product);
               }}
-              className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition hover:scale-105 dark:bg-pastelPink dark:text-ink"
+              className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition hover:-translate-y-1"
               aria-label="Add to cart"
             >
               <FiShoppingBag />

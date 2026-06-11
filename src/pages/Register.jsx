@@ -80,7 +80,7 @@ export default function Register() {
                 <button type="button" onClick={handleRequestOtp} className="mt-2 text-sm font-black text-rose-500">Resend OTP</button>
               </div>
             )}
-            <button disabled={loading} className="pill-button bg-gradient-to-r from-pastelPink via-lavender to-pastelBlue text-ink hover:scale-[1.02] disabled:opacity-60">{loading ? "Please wait..." : otpRequested ? "Verify and Register" : "Send OTP"}</button>
+            <button disabled={loading} className="pill-button bg-gradient-to-r from-secondary to-secondary-light text-ink hover:scale-[1.02] disabled:opacity-60">{loading ? "Please wait..." : otpRequested ? "Verify and Register" : "Send OTP"}</button>
           </form>
           <div className="mt-5"><SocialLoginButtons onSocialLogin={(provider) => { login({ email: `customer@${provider.toLowerCase()}.demo`, role: "customer" }); showToast(`${provider} customer signup successful`); navigate("/customer-dashboard"); }} /></div>
           <p className="mt-6 text-center text-sm font-semibold">Already have an account? <Link to="/login" className="text-rose-500">Login</Link></p>
@@ -88,7 +88,7 @@ export default function Register() {
         <div className="glass-card rounded-[38px] p-8">
           <span className="inline-flex items-center gap-2 rounded-full bg-pastelPink px-4 py-2 text-sm font-black text-rose-600"><FiGift /> Customer perks</span>
           <h2 className="mt-5 text-5xl font-black">Join the cozy craft community</h2>
-          <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Discover makers, save handmade pieces, and enjoy a soft premium shopping flow.</p>
+          <p className="mt-4 leading-8 text-slate-600">Discover makers, save handmade pieces, and enjoy a soft premium shopping flow.</p>
           <div className="mt-7 grid gap-4">
             {["Saved wishlist", "Quick checkout UI", "Recently viewed products"].map((item) => (
               <p key={item} className="flex items-center gap-2 font-bold"><FiCheckCircle className="text-emerald-500" /> {item}</p>

@@ -22,7 +22,7 @@ export default function WishlistButton({ product }) {
         }
         toggleWishlist(product);
       }}
-      className="grid h-10 w-10 place-items-center rounded-full bg-white/85 text-rose-500 shadow-lg backdrop-blur transition dark:bg-[#2d2638]/90 dark:text-pastelPink"
+      className="grid h-10 w-10 place-items-center rounded-full bg-white/85 text-rose-500 shadow-soft backdrop-blur transition"
       aria-label="Toggle wishlist"
     >
       {active ? <FaHeart /> : <FaRegHeart />}

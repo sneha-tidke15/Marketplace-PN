@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { FiBell, FiBox, FiDollarSign, FiSave, FiShoppingBag, FiUpload, FiUsers } from "react-icons/fi";
+import { useEffect, useMemo, useState } from "react";
+import { FiAlertTriangle, FiBell, FiBox, FiDollarSign, FiEdit3, FiPlusCircle, FiSave, FiShoppingBag, FiTrash2, FiUpload, FiX } from "react-icons/fi";
 import AnalyticsCard from "../components/AnalyticsCard";
 import DashboardSidebar from "../components/DashboardSidebar";
 import PageTransition from "../components/PageTransition";
@@ -13,31 +13,34 @@ const items = [
   { id: "customers", label: "Customers" },
   { id: "inventory", label: "Inventory" },
   { id: "add-product", label: "Add Product" },
-  { id: "categories", label: "Categories" },
   { id: "settings", label: "Settings" }
 ];
 
-const mediaLabels = ["Front view", "Side view", "Back view", "Inside/detail view", "Lifestyle/detail view", "Extra view"];
-
 export default function SellerDashboard() {
   const [active, setActive] = useState("dashboard");
-  const { notifications, products, categories, sellerCategories, addSellerCategory, addSellerProduct, showToast } = useShop();
-  const sellerNotifications = notifications.filter((item) => item.role === "seller");
+  const shop = useShop();
+  const sellerNotifications = shop.notifications.filter((item) => item.role === "seller");
+  const lowStock = shop.products.filter((product) => Number(product.stock ?? 12) > 0 && Number(product.stock ?? 12) <= 5);
 
   return (
     <PageTransition>
       <section className="container-soft grid gap-8 py-12 lg:grid-cols-[280px_1fr]">
         <DashboardSidebar title="Seller Studio" items={items} active={active} setActive={setActive} />
         <div className="space-y-6">
-          <h1 className="text-4xl font-black">Seller dashboard</h1>
-          {active === "dashboard" && <DashboardHome sellerNotifications={sellerNotifications} />}
-          {active === "products" && <ProductsSection products={products} />}
-          {active === "orders" && <ListSection title="Order management" items={["Pending orders: 12", "Delivered orders: 84", "Return requests: 3", "Customer messages: 7"]} />}
-          {active === "analytics" && <DashboardHome sellerNotifications={sellerNotifications} />}
-          {active === "customers" && <ListSection title="Customers" items={["Repeat customers: 42", "New customers this month: 18", "Pending feedback requests: 5"]} />}
-          {active === "inventory" && <ListSection title="Inventory" items={["Low stock products: 4", "In stock products: 36", "Draft listings: 2"]} />}
-          {active === "add-product" && <AddProduct categories={categories} addSellerProduct={addSellerProduct} showToast={showToast} />}
-          {active === "categories" && <CategoriesSection sellerCategories={sellerCategories} addSellerCategory={addSellerCategory} />}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h1 className="heading-font text-4xl font-black">Seller dashboard</h1>
+              <p className="mt-2 text-sm font-semibold text-slate-600">Manage listings, stock, categories, images, and marketplace alerts.</p>
+            </div>
+            <span className="rounded-full bg-mint px-4 py-2 text-sm font-black text-emerald-700">82% store completion</span>
+          </div>
+          {active === "dashboard" && <DashboardHome sellerNotifications={sellerNotifications} products={shop.products} lowStock={lowStock} />}
+          {active === "products" && <ProductsSection products={shop.products} updateSellerProduct={shop.updateSellerProduct} deleteSellerProduct={shop.deleteSellerProduct} showToast={shop.showToast} />}
+          {active === "orders" && <ListSection title="Order management" items={["New order received: AK-2041", "Pending orders: 12", "Delivered orders: 84", "Return requests: 3"]} />}
+          {active === "analytics" && <DashboardHome sellerNotifications={sellerNotifications} products={shop.products} lowStock={lowStock} />}
+          {active === "customers" && <ListSection title="Customers" items={["Repeat customers: 42", "New customers this month: 18", "Pending feedback requests: 5", "Wishlist saves: 62"]} />}
+          {active === "inventory" && <LowStockAlerts lowStock={lowStock} />}
+          {active === "add-product" && <AddProduct {...shop} />}
           {active === "settings" && <ListSection title="Settings" items={["Shipping price: Rs. 69 base", "Delivery regions: All India", "Pincode pricing enabled", "Estimated delivery: 4-8 days"]} />}
         </div>
       </section>
@@ -45,613 +48,254 @@ export default function SellerDashboard() {
   );
 }
 
-function DashboardHome({ sellerNotifications }) {
+function DashboardHome({ sellerNotifications, products, lowStock }) {
   return (
     <>
       <div className="grid gap-5 md:grid-cols-4">
-        <AnalyticsCard icon={FiDollarSign} label="Revenue" value="Rs. 82k" tone="bg-mint" />
+        <AnalyticsCard icon={FiBox} label="Total Products" value={String(products.length)} tone="bg-pastelBlue" />
         <AnalyticsCard icon={FiShoppingBag} label="Orders" value="128" tone="bg-pastelPink" />
-        <AnalyticsCard icon={FiBox} label="Products" value="36" tone="bg-pastelBlue" />
-        <AnalyticsCard icon={FiBell} label="Alerts" value={String(sellerNotifications.length)} tone="bg-lavender" />
+        <AnalyticsCard icon={FiDollarSign} label="Revenue" value="Rs. 82k" tone="bg-mint" />
+        <AnalyticsCard icon={FiAlertTriangle} label="Low Stock Items" value={String(lowStock.length)} tone="bg-lavender" />
       </div>
+      <LowStockAlerts lowStock={lowStock.slice(0, 4)} compact />
       <div className="glass-card rounded-[30px] p-6">
-        <h2 className="mb-4 text-2xl font-black">Notifications</h2>
+        <h2 className="mb-4 flex items-center gap-2 text-2xl font-black"><FiBell /> Notifications Panel</h2>
         <div className="grid gap-3">
-          {sellerNotifications.length ? sellerNotifications.map((item) => <p key={item.id} className="rounded-2xl bg-white/60 p-4 font-bold dark:bg-white/10">{item.text}</p>) : <p className="rounded-2xl bg-white/60 p-4 font-bold dark:bg-white/10">No seller alerts right now.</p>}
+          {[
+            "Product running low: Cotton Kurti only 5 items left.",
+            "Product out of stock: Handcrafted Wall Clock.",
+            "New order received: Brass Diya x 2."
+          ].map((item) => <p key={item} className="rounded-2xl bg-white/60 p-4 font-bold">{item}</p>)}
+          {sellerNotifications.map((item) => <p key={item.id} className="rounded-2xl bg-white/60 p-4 font-bold">{item.text}</p>)}
         </div>
       </div>
     </>
   );
 }
 
-function ProductsSection({ products }) {
+function LowStockAlerts({ lowStock, compact = false }) {
+  return (
+    <div className="glass-card rounded-[30px] p-6">
+      <h2 className="mb-4 flex items-center gap-2 text-2xl font-black"><FiAlertTriangle className="text-amber-500" /> Low Stock Alerts</h2>
+      {lowStock.length ? (
+        <div className={`grid gap-4 ${compact ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+          {lowStock.map((product) => (
+            <div key={product.id} className="rounded-2xl bg-amber-50 p-4 font-bold text-amber-900">
+              <p>{product.title}</p>
+              <p className="mt-1 text-sm">Only {product.stock} items left.</p>
+            </div>
+          ))}
+        </div>
+      ) : <p className="rounded-2xl bg-white/60 p-4 font-bold">No low stock products right now.</p>}
+    </div>
+  );
+}
+
+function ProductsSection({ products, updateSellerProduct, deleteSellerProduct, showToast }) {
+  const [rows, setRows] = useState([]);
+  const [editing, setEditing] = useState(null);
+
+  useEffect(() => {
+    setRows(products.slice(0, 18).map((product) => ({ ...product, stock: Number(product.stock ?? 12) })));
+  }, [products]);
+
+  const saveProduct = (updates) => {
+    setRows((current) => current.map((item) => (item.id === updates.id ? { ...item, ...updates } : item)));
+    if (String(updates.id).startsWith("seller-")) updateSellerProduct(updates.id, updates);
+    showToast("Product updated");
+    setEditing(null);
+  };
+
+  const removeProduct = (id) => {
+    setRows((current) => current.filter((item) => item.id !== id));
+    if (String(id).startsWith("seller-")) deleteSellerProduct(id);
+    else showToast("Mock product deleted from dashboard view");
+  };
+
   return (
     <div className="glass-card overflow-x-auto rounded-[30px] p-6">
-      <h2 className="mb-4 text-2xl font-black">Product management</h2>
-      <table className="w-full min-w-[640px] text-left text-sm">
+      <h2 className="mb-4 text-2xl font-black">Product Management</h2>
+      <table className="w-full min-w-[880px] text-left text-sm">
         <thead>
-          <tr className="text-slate-500 dark:text-slate-300"><th className="py-3">Product</th><th>Category</th><th>Price</th><th>Status</th></tr>
+          <tr className="text-slate-500"><th className="py-3">Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
         </thead>
         <tbody>
-          {products.slice(0, 12).map((product) => (
+          {rows.map((product) => (
             <tr key={product.id} className="border-t border-white/60">
               <td className="py-3 font-bold">{product.title}</td>
               <td className="capitalize">{product.category}</td>
               <td>Rs. {product.price}</td>
-              <td><span className="rounded-full bg-mint px-3 py-1 text-xs font-black text-ink">Live</span></td>
+              <td>{product.stock}</td>
+              <td><StockBadge stock={product.stock} /></td>
+              <td className="flex gap-2 py-3">
+                <button onClick={() => setEditing(product)} title="Edit Product" className="grid h-10 w-10 place-items-center rounded-full bg-pastelBlue text-ink"><FiEdit3 /></button>
+                <button onClick={() => removeProduct(product.id)} title="Delete Product" className="grid h-10 w-10 place-items-center rounded-full bg-red-100 text-red-600"><FiTrash2 /></button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {editing && <ProductEditModal product={editing} onClose={() => setEditing(null)} onSave={saveProduct} />}
     </div>
   );
 }
 
-function AddProduct({
-  categories,
-  addSellerProduct,
-  showToast,
-}) {
-  const [productData, setProductData] =
-    useState({
-      title: "",
-      category: "",
-      basePrice: "",
-      description: "",
-      careInstructions: "",
-      returnPolicy: "",
-      shippingInfo: "",
-    });
-
-  const [productImages, setProductImages] =
-    useState([]);
-
-  const [productVideo, setProductVideo] =
-    useState(null);
-
-  // PRODUCT VARIANTS
-  const [variants, setVariants] = useState([
-    {
-      color: "",
-      design: "",
-      size: "",
-      price: "",
-      stock: "",
-      image: null,
-    },
-  ]);
-
-  const [saving, setSaving] =
-    useState(false);
-
-  const imagePreviews = useMemo(
-    () =>
-      productImages.map((image) =>
-        URL.createObjectURL(image)
-      ),
-    [productImages]
+function ProductEditModal({ product, onClose, onSave }) {
+  const [form, setForm] = useState({ ...product, imageFile: null });
+  return (
+    <div className="fixed inset-0 z-[10000] grid place-items-center bg-black/40 p-4 backdrop-blur">
+      <div className="glass-card w-full max-w-2xl rounded-[28px] p-6">
+        <div className="flex items-center justify-between">
+          <h3 className="text-2xl font-black">Edit Product</h3>
+          <button onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full bg-white/70"><FiX /></button>
+        </div>
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input type="number" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input type="number" value={form.stock} onChange={(event) => setForm({ ...form, stock: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input type="file" accept="image/*" onChange={(event) => setForm({ ...form, imageFile: event.target.files?.[0] })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+        </div>
+        <textarea value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="mt-4 min-h-28 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+        <button onClick={() => onSave({ ...form, stock: Number(form.stock), price: Number(form.price) })} className="pill-button mt-5 bg-ink text-white"><FiSave /> Save changes</button>
+      </div>
+    </div>
   );
+}
 
-  // PRODUCT INPUT CHANGE
-  const handleChange = (event) => {
-    setProductData({
-      ...productData,
-      [event.target.name]:
-        event.target.value,
-    });
+function StockBadge({ stock }) {
+  const label = stock <= 0 ? "Out of Stock" : stock <= 5 ? "Low Stock" : "In Stock";
+  const tone = stock <= 0 ? "bg-red-100 text-red-700" : stock <= 5 ? "bg-amber-100 text-amber-700" : "bg-mint text-emerald-800";
+  return <span className={`rounded-full px-3 py-1 text-xs font-black ${tone}`}>{label}</span>;
+}
+
+function AddProduct({ categories, sellerCategories, addSellerCategory, updateSellerCategory, deleteSellerCategory, addSellerProduct, showToast }) {
+  const [productData, setProductData] = useState({ title: "", category: "", basePrice: "", stock: "", description: "", careInstructions: "", returnPolicy: "", shippingInfo: "" });
+  const [productImages, setProductImages] = useState([]);
+  const [optimized, setOptimized] = useState(false);
+  const [categoryModal, setCategoryModal] = useState(false);
+  const [categoryForm, setCategoryForm] = useState({ name: "", description: "", id: null });
+  const [saving, setSaving] = useState(false);
+
+  const imagePreviews = useMemo(() => productImages.map((image) => URL.createObjectURL(image)), [productImages]);
+
+  const handleImages = (files) => {
+    const selected = Array.from(files).filter((file) => ["image/jpeg", "image/png"].includes(file.type));
+    if (selected.some((file) => file.size > 5 * 1024 * 1024)) return showToast("Each product image must be 5MB or less");
+    setProductImages(selected.slice(0, 6));
+    setOptimized(false);
+    window.setTimeout(() => {
+      setOptimized(true);
+      showToast("Images optimized successfully");
+    }, 550);
   };
 
-  // ADD VARIANT
-  const addVariant = () => {
-    setVariants([
-      ...variants,
-      {
-        color: "",
-        design: "",
-        size: "",
-        price: "",
-        stock: "",
-        image: null,
-      },
-    ]);
+  const saveCategory = (event) => {
+    event.preventDefault();
+    if (categoryForm.id) updateSellerCategory(categoryForm.id, categoryForm);
+    else if (addSellerCategory(categoryForm)) setProductData((data) => ({ ...data, category: categoryForm.name.trim().toLowerCase() }));
+    setCategoryForm({ name: "", description: "", id: null });
+    setCategoryModal(false);
   };
 
-  // REMOVE VARIANT
-  const removeVariant = (index) => {
-    const updated = [...variants];
-
-    updated.splice(index, 1);
-
-    setVariants(updated);
-  };
-
-  // UPDATE VARIANT
-  const updateVariant = (
-    index,
-    field,
-    value
-  ) => {
-    const updated = [...variants];
-
-    updated[index][field] = value;
-
-    setVariants(updated);
-  };
-
-  // SAVE PRODUCT
   const handleSaveProduct = () => {
-    if (
-      !productData.title.trim() ||
-      !productData.category ||
-      !productData.basePrice
-    ) {
-      showToast(
-        "Complete product title, category and price"
-      );
-
-      return;
-    }
-
-    if (
-      productImages.length < 5 ||
-      productImages.length > 6
-    ) {
-      showToast(
-        "Upload 5 to 6 product images"
-      );
-
-      return;
-    }
-
-    if (!productVideo) {
-      showToast(
-        "Upload one product demo video"
-      );
-
-      return;
-    }
-
+    if (!productData.title.trim() || !productData.category || !productData.basePrice || !productData.stock) return showToast("Complete product title, category, price and stock");
+    if (productImages.length < 3 || productImages.length > 6) return showToast("Upload 3 to 6 product images");
     setSaving(true);
-
     window.setTimeout(() => {
       addSellerProduct({
         title: productData.title,
-
         category: productData.category,
-
         price: productData.basePrice,
-
-        description:
-          productData.description,
-
+        stock: Number(productData.stock),
+        description: productData.description,
         images: imagePreviews,
-
-        video:
-          URL.createObjectURL(
-            productVideo
-          ),
-
-        // VARIANTS
-        variants: variants.map(
-          (variant) => ({
-            ...variant,
-
-            image: variant.image
-              ? URL.createObjectURL(
-                  variant.image
-                )
-              : null,
-          })
-        ),
-
-        handmadeDetails:
-          productData.careInstructions ||
-          productData.description,
-
-        estimatedDelivery:
-          productData.shippingInfo ||
-          "4-8 days",
-
-        policy: {
-          returnAvailable: true,
-
-          returnDays: 7,
-
-          refundRules:
-            productData.returnPolicy ||
-            "Seller policy applies.",
-        },
-
-        seller: {
-          name: "Akriti Seller Studio",
-
-          location: "India",
-
-          verified: true,
-
-          avatar: imagePreviews[0],
-
-          rating: 0,
-
-          story:
-            productData.description,
-
-          socials: {
-            instagram: "#",
-
-            website: "#",
-          },
-        },
+        handmadeDetails: productData.careInstructions || productData.description,
+        estimatedDelivery: productData.shippingInfo || "4-8 days",
+        policy: { returnAvailable: true, returnDays: 7, refundRules: productData.returnPolicy || "Seller policy applies." },
+        seller: { name: "Akriti Seller Studio", location: "India", verified: true, avatar: imagePreviews[0], rating: 0, story: productData.description, socials: { instagram: "#", website: "#" } }
       });
-
       setSaving(false);
-
-      setProductData({
-        title: "",
-        category: "",
-        basePrice: "",
-        description: "",
-        careInstructions: "",
-        returnPolicy: "",
-        shippingInfo: "",
-      });
-
+      setProductData({ title: "", category: "", basePrice: "", stock: "", description: "", careInstructions: "", returnPolicy: "", shippingInfo: "" });
       setProductImages([]);
-
-      setProductVideo(null);
-
-      setVariants([
-        {
-          color: "",
-          design: "",
-          size: "",
-          price: "",
-          stock: "",
-          image: null,
-        },
-      ]);
-
-      showToast(
-        "Product added successfully"
-      );
+      setOptimized(false);
     }, 500);
   };
 
   return (
-    <div className="glass-card rounded-[30px] p-6">
-      <h2 className="text-3xl font-black">
-        Add product
-      </h2>
-
-      {/* PRODUCT INFO */}
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
-        <input
-          type="text"
-          name="title"
-          placeholder="Product title"
-          value={productData.title}
-          onChange={handleChange}
-          className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-        />
-
-        <select
-          name="category"
-          value={productData.category}
-          onChange={handleChange}
-          className="rounded-2xl bg-white/70 px-4 py-3 font-semibold capitalize outline-none dark:bg-white/10"
-        >
-          <option value="">
-            Select category
-          </option>
-
-          {categories.map((category) => (
-            <option
-              key={category}
-              value={category}
-            >
-              {category}
-            </option>
-          ))}
-        </select>
-
-        <input
-          type="number"
-          name="basePrice"
-          placeholder="Base price"
-          value={productData.basePrice}
-          onChange={handleChange}
-          className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-        />
-      </div>
-
-      {/* DESCRIPTION */}
-      <textarea
-        name="description"
-        placeholder="Product description"
-        value={productData.description}
-        onChange={handleChange}
-        className="mt-4 min-h-32 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-      />
-
-      {/* PRODUCT IMAGES */}
-      <div className="mt-10">
-        <h3 className="mb-4 text-xl font-black">
-          Product Images
-        </h3>
-
-        <label className="flex cursor-pointer items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-pastelPink bg-white/60 px-4 py-6 font-black dark:bg-white/10">
-          <FiUpload />
-
-          Upload 5 to 6 images
-
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={(event) =>
-              setProductImages(
-                Array.from(
-                  event.target.files
-                ).slice(0, 6)
-              )
-            }
-            className="hidden"
-          />
-        </label>
-
-        {/* PREVIEW */}
-        <div className="mt-5 grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {imagePreviews.map(
-            (image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt=""
-                className="aspect-square w-full rounded-2xl object-cover"
-              />
-            )
-          )}
-        </div>
-      </div>
-
-      {/* PRODUCT VIDEO */}
-      <div className="mt-8">
-        <h3 className="mb-4 text-xl font-black">
-          Product Demo Video
-        </h3>
-
-        <input
-          type="file"
-          accept="video/*"
-          onChange={(event) =>
-            setProductVideo(
-              event.target.files?.[0] ||
-                null
-            )
-          }
-          className="w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-        />
-
-        {productVideo && (
-          <p className="mt-3 rounded-2xl bg-white/60 p-4 text-sm font-bold dark:bg-white/10">
-            {productVideo.name}
-          </p>
-        )}
-      </div>
-
-      {/* VARIANTS */}
-      <div className="mt-10">
-        <div className="mb-5 flex items-center justify-between">
-          <h3 className="text-xl font-black">
-            Product Variants
-          </h3>
-
-          <button
-            type="button"
-            onClick={addVariant}
-            className="rounded-2xl bg-pastelPink px-5 py-3 font-bold text-ink transition hover:scale-105"
-          >
-            + Add Variant
-          </button>
-        </div>
-
-        <div className="space-y-5">
-          {variants.map(
-            (variant, index) => (
-              <div
-                key={index}
-                className="rounded-3xl bg-white/50 p-5 dark:bg-white/10"
-              >
-                <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
-
-                  {/* COLOR */}
-                  <input
-                    type="text"
-                    placeholder="Color"
-                    value={variant.color}
-                    onChange={(e) =>
-                      updateVariant(
-                        index,
-                        "color",
-                        e.target.value
-                      )
-                    }
-                    className="rounded-2xl px-4 py-3 font-semibold outline-none"
-                  />
-
-                  {/* DESIGN */}
-                  <input
-                    type="text"
-                    placeholder="Design"
-                    value={variant.design}
-                    onChange={(e) =>
-                      updateVariant(
-                        index,
-                        "design",
-                        e.target.value
-                      )
-                    }
-                    className="rounded-2xl px-4 py-3 font-semibold outline-none"
-                  />
-
-                  {/* SIZE */}
-                  <input
-                    type="text"
-                    placeholder="Size"
-                    value={variant.size}
-                    onChange={(e) =>
-                      updateVariant(
-                        index,
-                        "size",
-                        e.target.value
-                      )
-                    }
-                    className="rounded-2xl px-4 py-3 font-semibold outline-none"
-                  />
-
-                  {/* PRICE */}
-                  <input
-                    type="number"
-                    placeholder="Variant price"
-                    value={variant.price}
-                    onChange={(e) =>
-                      updateVariant(
-                        index,
-                        "price",
-                        e.target.value
-                      )
-                    }
-                    className="rounded-2xl px-4 py-3 font-semibold outline-none"
-                  />
-
-                  {/* STOCK */}
-                  <input
-                    type="number"
-                    placeholder="Stock"
-                    value={variant.stock}
-                    onChange={(e) =>
-                      updateVariant(
-                        index,
-                        "stock",
-                        e.target.value
-                      )
-                    }
-                    className="rounded-2xl px-4 py-3 font-semibold outline-none"
-                  />
-
-                  {/* IMAGE */}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      updateVariant(
-                        index,
-                        "image",
-                        e.target.files[0]
-                      )
-                    }
-                    className="rounded-2xl bg-white px-3 py-3 font-semibold"
-                  />
-                </div>
-
-                {/* VARIANT PREVIEW */}
-                {variant.image && (
-                  <div className="mt-4 flex items-center justify-between">
-                    <img
-                      src={URL.createObjectURL(
-                        variant.image
-                      )}
-                      alt=""
-                      className="h-24 w-24 rounded-2xl object-cover"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removeVariant(index)
-                      }
-                      className="rounded-2xl bg-red-100 px-4 py-3 font-bold text-red-600"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                )}
-              </div>
-            )
-          )}
-        </div>
-      </div>
-
-      {/* POLICIES */}
-      <div className="mt-10 grid gap-4">
-        <textarea
-          name="careInstructions"
-          placeholder="Care instructions"
-          value={
-            productData.careInstructions
-          }
-          onChange={handleChange}
-          className="min-h-24 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-        />
-
-        <textarea
-          name="returnPolicy"
-          placeholder="Return & exchange policy"
-          value={productData.returnPolicy}
-          onChange={handleChange}
-          className="min-h-24 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-        />
-
-        <textarea
-          name="shippingInfo"
-          placeholder="Shipping & delivery information"
-          value={productData.shippingInfo}
-          onChange={handleChange}
-          className="min-h-24 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10"
-        />
-      </div>
-
-      {/* SAVE BUTTON */}
-      <button
-        onClick={handleSaveProduct}
-        disabled={saving}
-        className="pill-button mt-8 bg-ink text-white disabled:opacity-60 dark:bg-pastelPink dark:text-ink"
-      >
-        {saving
-          ? "Saving..."
-          : "Save Product"}
-      </button>
-    </div>
-  );
-}
-
-function CategoriesSection({ sellerCategories, addSellerCategory }) {
-  const [form, setForm] = useState({ name: "", description: "" });
-
-  const submit = (event) => {
-    event.preventDefault();
-    if (addSellerCategory(form)) setForm({ name: "", description: "" });
-  };
-
-  return (
-    <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-      <form onSubmit={submit} className="glass-card rounded-[30px] p-6">
-        <h2 className="text-2xl font-black">Create category</h2>
-        <input placeholder="Category name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} className="mt-5 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-        <textarea placeholder="Category description" value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} className="mt-4 min-h-28 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none dark:bg-white/10" />
-        <button className="pill-button mt-5 bg-ink text-white dark:bg-pastelPink dark:text-ink">Create category</button>
-      </form>
+    <div className="grid gap-6">
       <div className="glass-card rounded-[30px] p-6">
-        <h2 className="text-2xl font-black">Seller categories</h2>
-        <div className="mt-5 grid gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-3xl font-black">Add Product</h2>
+          <button onClick={() => setCategoryModal(true)} className="pill-button bg-pastelBlue text-ink"><FiPlusCircle /> Add New Category</button>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <input name="title" placeholder="Product title" value={productData.title} onChange={(event) => setProductData({ ...productData, title: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <select value={productData.category} onChange={(event) => event.target.value === "__new" ? setCategoryModal(true) : setProductData({ ...productData, category: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold capitalize outline-none">
+            <option value="">Select category</option>
+            {categories.map((category) => <option key={category} value={category}>{category}</option>)}
+            <option value="__new">+ Add New Category</option>
+          </select>
+          <input type="number" placeholder="Base price" value={productData.basePrice} onChange={(event) => setProductData({ ...productData, basePrice: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <input type="number" placeholder="Stock quantity" value={productData.stock} onChange={(event) => setProductData({ ...productData, stock: event.target.value })} className="rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+        </div>
+        <textarea placeholder="Product description" value={productData.description} onChange={(event) => setProductData({ ...productData, description: event.target.value })} className="mt-4 min-h-32 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+
+        <div className="mt-8 rounded-[26px] bg-white/50 p-5">
+          <h3 className="text-xl font-black">Upload 3-6 product images</h3>
+          <ul className="mt-3 grid gap-2 text-sm font-semibold text-slate-600 sm:grid-cols-2">
+            <li>Use clear, well-lit images</li>
+            <li>Show product from different angles</li>
+            <li>Include close-up images of important details</li>
+            <li>Use plain background if possible</li>
+          </ul>
+          <p className="mt-3 text-xs font-bold text-slate-500">Formats: JPG, PNG. Max size: 5MB each.</p>
+          <label className="mt-5 flex cursor-pointer items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-pastelPink bg-white/60 px-4 py-6 font-black">
+            <FiUpload /> Upload product images
+            <input type="file" multiple accept="image/png,image/jpeg" onChange={(event) => handleImages(event.target.files || [])} className="hidden" />
+          </label>
+          {optimized && <p className="mt-4 rounded-2xl bg-mint p-4 text-sm font-black text-emerald-800">Images optimized successfully.</p>}
+          <div className="mt-5 grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            {imagePreviews.map((image, index) => <img key={index} src={image} alt={`Product preview ${index + 1}`} className="aspect-square w-full rounded-2xl object-cover" />)}
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-4">
+          <textarea placeholder="Care instructions" value={productData.careInstructions} onChange={(event) => setProductData({ ...productData, careInstructions: event.target.value })} className="min-h-20 rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <textarea placeholder="Return & exchange policy" value={productData.returnPolicy} onChange={(event) => setProductData({ ...productData, returnPolicy: event.target.value })} className="min-h-20 rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+          <textarea placeholder="Shipping & delivery information" value={productData.shippingInfo} onChange={(event) => setProductData({ ...productData, shippingInfo: event.target.value })} className="min-h-20 rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+        </div>
+        <button onClick={handleSaveProduct} disabled={saving} className="pill-button mt-8 bg-ink text-white disabled:opacity-60">{saving ? "Saving..." : "Save Product"}</button>
+      </div>
+
+      <div className="glass-card rounded-[30px] p-6">
+        <h2 className="text-2xl font-black">Seller Category Management</h2>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
           {sellerCategories.length ? sellerCategories.map((category) => (
-            <div key={category.id} className="rounded-2xl bg-white/60 p-4 dark:bg-white/10">
+            <div key={category.id} className="rounded-2xl bg-white/60 p-4">
               <p className="font-black capitalize">{category.name}</p>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-200">{category.description || "No description added."}</p>
+              <p className="mt-1 text-sm text-slate-600">{category.description || "No description added."}</p>
+              <div className="mt-3 flex gap-2">
+                <button onClick={() => { setCategoryForm(category); setCategoryModal(true); }} className="rounded-full bg-pastelBlue px-3 py-2 text-xs font-black text-ink">Edit</button>
+                <button onClick={() => deleteSellerCategory(category.id)} className="rounded-full bg-red-100 px-3 py-2 text-xs font-black text-red-600">Delete</button>
+              </div>
             </div>
-          )) : <p className="rounded-2xl bg-white/60 p-4 font-bold dark:bg-white/10">New seller categories will appear on homepage and shop filters.</p>}
+          )) : <p className="rounded-2xl bg-white/60 p-4 font-bold">Add seller-created categories here; they become available in the product category dropdown immediately.</p>}
         </div>
       </div>
+
+      {categoryModal && (
+        <div className="fixed inset-0 z-[10000] grid place-items-center bg-black/40 p-4 backdrop-blur">
+          <form onSubmit={saveCategory} className="glass-card w-full max-w-lg rounded-[28px] p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl font-black">{categoryForm.id ? "Edit Category" : "Add New Category"}</h3>
+              <button type="button" onClick={() => setCategoryModal(false)} className="grid h-10 w-10 place-items-center rounded-full bg-white/70"><FiX /></button>
+            </div>
+            <input placeholder="Category Name" value={categoryForm.name} onChange={(event) => setCategoryForm({ ...categoryForm, name: event.target.value })} className="mt-5 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+            <textarea placeholder="Description" value={categoryForm.description} onChange={(event) => setCategoryForm({ ...categoryForm, description: event.target.value })} className="mt-4 min-h-28 w-full rounded-2xl bg-white/70 px-4 py-3 font-semibold outline-none" />
+            <button className="pill-button mt-5 bg-ink text-white">Save</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
@@ -661,7 +305,7 @@ function ListSection({ title, items }) {
     <div className="glass-card rounded-[30px] p-6">
       <h2 className="text-2xl font-black">{title}</h2>
       <div className="mt-5 grid gap-3 md:grid-cols-2">
-        {items.map((item) => <p key={item} className="rounded-2xl bg-white/60 p-4 font-bold dark:bg-white/10">{item}</p>)}
+        {items.map((item) => <p key={item} className="rounded-2xl bg-white/60 p-4 font-bold">{item}</p>)}
       </div>
     </div>
   );

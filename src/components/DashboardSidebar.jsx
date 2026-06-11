@@ -1,6 +1,6 @@
-import { FiBarChart2, FiBell, FiBox, FiGrid, FiHome, FiPlusCircle, FiSettings, FiShoppingBag, FiUsers } from "react-icons/fi";
+import { FiBarChart2, FiBell, FiBox, FiGrid, FiHeart, FiHome, FiPlusCircle, FiSettings, FiShoppingBag, FiUser, FiUsers } from "react-icons/fi";
 
-const iconMap = { overview: FiHome, dashboard: FiHome, products: FiBox, orders: FiShoppingBag, analytics: FiBarChart2, customers: FiUsers, inventory: FiBox, "add-product": FiPlusCircle, categories: FiGrid, users: FiUsers, notifications: FiBell, settings: FiSettings };
+const iconMap = { overview: FiHome, dashboard: FiHome, products: FiBox, orders: FiShoppingBag, wishlist: FiHeart, addresses: FiHome, profile: FiUser, analytics: FiBarChart2, customers: FiUsers, inventory: FiBox, "add-product": FiPlusCircle, categories: FiGrid, users: FiUsers, notifications: FiBell, settings: FiSettings };
 
 export default function DashboardSidebar({ title, items, active, setActive }) {
   return (
@@ -10,7 +10,7 @@ export default function DashboardSidebar({ title, items, active, setActive }) {
         {items.map((item) => {
           const Icon = iconMap[item.id] || FiHome;
           return (
-            <button key={item.id} onClick={() => setActive(item.id)} className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition ${active === item.id ? "bg-ink text-white dark:bg-pastelPink dark:text-ink" : "bg-white/55 hover:bg-pastelBlue dark:bg-white/10"}`}>
+            <button key={item.id} onClick={() => setActive(item.id)} className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold transition ${active === item.id ? "bg-ink text-white" : "bg-white/55 hover:bg-pastelBlue"}`}>
               <Icon /> {item.label}
             </button>
           );

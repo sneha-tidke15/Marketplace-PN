@@ -5,7 +5,8 @@ import { useShop } from "../context/ShopContext";
 // Protects dashboard pages and checks the user's fake frontend role.
 export default function ProtectedRoute({ children, role }) {
   const { user, showToast } = useShop();
-  const isWrongRole = Boolean(user && role && user.role !== role);
+  const hasAccess = !role || (role === "customer" ? ["customer", "seller"].includes(user?.role) : user?.role === role);
+  const isWrongRole = Boolean(user && !hasAccess);
   const message = !user
     ? role === "seller" ? "Seller access only" : "Please login first"
     : role === "seller" ? "Seller access only" : "Login required to continue";

@@ -9,7 +9,7 @@ export default function InputField({ label, error, as = "input", className = "",
         className={`mt-2 w-full rounded-2xl border px-4 py-3 font-semibold outline-none transition focus:scale-[1.01] ${
           error
             ? "border-rose-300 bg-rose-50"
-            : "border-white/60 bg-white/75 focus:border-pastelPink dark:border-white/10 dark:bg-white/10"
+            : "border-white/60 bg-white/75 focus:border-pastelPink"
         }`}
       />
       {error && <span className="mt-1 block text-xs font-bold text-rose-500">{error}</span>}

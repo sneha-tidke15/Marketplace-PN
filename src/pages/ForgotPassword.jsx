@@ -27,7 +27,7 @@ export default function ForgotPassword() {
         <AuthCard title="Forgot Password" subtitle="Enter your account email and we will show a fake success message for the reset flow." side="left">
           <form onSubmit={submit} className="mt-6 grid gap-4">
             <InputField label="Email Address" type="email" value={email} error={error} onChange={(event) => setEmail(event.target.value)} />
-            <button className="pill-button bg-gradient-to-r from-pastelPink via-lavender to-pastelBlue text-ink hover:scale-[1.02]"><FiMail /> Send reset link</button>
+            <button className="pill-button bg-gradient-to-r from-secondary to-secondary-light text-ink hover:scale-[1.02]"><FiMail /> Send reset link</button>
           </form>
           <div className="mt-6 flex justify-center gap-4 text-sm font-bold">
             <Link to="/login" className="text-rose-500">Customer login</Link>

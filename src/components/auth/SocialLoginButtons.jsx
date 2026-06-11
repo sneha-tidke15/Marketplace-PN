@@ -6,14 +6,14 @@ export default function SocialLoginButtons({ onSocialLogin }) {
       <button
         type="button"
         onClick={() => onSocialLogin("Google")}
-        className="pill-button bg-white/75 text-ink shadow-sm hover:-translate-y-1 hover:shadow-glow dark:bg-white/10 dark:text-white"
+        className="pill-button bg-white/75 text-ink shadow-sm hover:-translate-y-1 hover:shadow-glow"
       >
         <FaGoogle /> Continue with Google
       </button>
       <button
         type="button"
         onClick={() => onSocialLogin("Facebook")}
-        className="pill-button bg-white/75 text-ink shadow-sm hover:-translate-y-1 hover:shadow-glow dark:bg-white/10 dark:text-white"
+        className="pill-button bg-white/75 text-ink shadow-sm hover:-translate-y-1 hover:shadow-glow"
       >
         <FaFacebookF /> Continue with Facebook
       </button>

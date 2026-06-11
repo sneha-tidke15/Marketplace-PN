@@ -9,7 +9,7 @@ export default function AuthCard({ title, subtitle, children, side = "right" }) 
       className="glass-card rounded-[34px] p-6 sm:p-8"
     >
       <h1 className="text-3xl font-black md:text-4xl">{title}</h1>
-      {subtitle && <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">{subtitle}</p>}
+      {subtitle && <p className="mt-3 text-sm leading-6 text-slate-600">{subtitle}</p>}
       {children}
     </motion.div>
   );

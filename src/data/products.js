@@ -26,7 +26,36 @@ export const categories = [
   "handmade stationery",
   "wooden crafts",
   "floral crafts",
-  "handwoven products"
+  "handwoven products",
+  "fashion",
+  "men's wear",
+  "women's wear",
+  "kids wear",
+  "ethnic wear",
+  "sarees",
+  "kurtis",
+  "lehengas",
+  "footwear",
+  "bags",
+  "watches",
+  "jewellery",
+  "home",
+  "furniture",
+  "lighting",
+  "kitchen",
+  "electronics",
+  "mobile accessories",
+  "smart gadgets",
+  "beauty",
+  "beauty products",
+  "personal care",
+  "handmade",
+  "handicrafts",
+  "paintings",
+  "pottery",
+  "food",
+  "homemade snacks",
+  "organic products"
 ];
 
 export const slugifySeller = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -418,6 +447,82 @@ export const products = [
     reviews: [{ user: "Harini", rating: 4.7, text: "My nephew loved it, and the finish is smooth." }]
   }
 ];
+
+const dummyProductTitles = [
+  ["Handwoven Saree", "sarees", 2499, 18],
+  ["Cotton Kurti", "kurtis", 899, 5],
+  ["Brass Diya", "handicrafts", 399, 42],
+  ["Wooden Temple", "furniture", 5499, 3],
+  ["Handmade Painting", "paintings", 1899, 7],
+  ["Leather Bag", "bags", 2199, 11],
+  ["Silver Jewellery Set", "jewellery", 1599, 24],
+  ["Bamboo Basket", "handicrafts", 499, 31],
+  ["Organic Honey", "organic products", 349, 16],
+  ["Handmade Soap", "beauty products", 249, 55],
+  ["Block Print Dupatta", "ethnic wear", 799, 14],
+  ["Jaipuri Mojari", "footwear", 1299, 9],
+  ["Kids Cotton Frock", "kids wear", 999, 12],
+  ["Men's Linen Kurta", "men's wear", 1499, 8],
+  ["Kundan Earrings", "jewellery", 699, 19],
+  ["Terracotta Planter", "pottery", 649, 22],
+  ["Handmade Rakhi Box", "handmade gifts", 599, 28],
+  ["Macrame Lamp Shade", "lighting", 1799, 6],
+  ["Banarasi Lehenga", "lehengas", 6999, 2],
+  ["Copper Water Bottle", "kitchen", 999, 27],
+  ["Phone Charm Set", "mobile accessories", 299, 44],
+  ["Ayurvedic Hair Oil", "personal care", 449, 21],
+  ["Smart LED Diya", "smart gadgets", 799, 13],
+  ["Handcrafted Wall Clock", "watches", 1299, 0],
+  ["Phulkari Cushion", "home decor", 749, 17],
+  ["Millet Laddoo Box", "homemade snacks", 399, 25],
+  ["Chikankari Top", "women's wear", 1199, 10],
+  ["Wooden Serving Tray", "home", 1099, 4],
+  ["Beaded Sling Bag", "handbags", 899, 15],
+  ["Natural Lip Balm Set", "beauty", 299, 34],
+  ["Madhubani Bookmark Set", "handmade", 199, 38],
+  ["Jute Storage Basket", "home decor", 849, 6]
+];
+
+const dummyImages = [
+  "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1589118949245-7d38baf380d6?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80"
+];
+
+products.push(
+  ...dummyProductTitles.map(([title, category, price, stock], index) => ({
+    id: 100 + index,
+    title,
+    category,
+    price,
+    stock,
+    discount: index % 4 === 0 ? 15 : index % 3 === 0 ? 10 : 6,
+    trend: index < 8,
+    eventTags: ["Made in India", "Small Business"],
+    description: `${title} from an Indian small business seller, made for everyday marketplace shopping and gifting.`,
+    images: [dummyImages[index % dummyImages.length], dummyImages[(index + 2) % dummyImages.length], dummyImages[(index + 4) % dummyImages.length]],
+    colors: ["Natural", "Festive", "Classic"],
+    sizes: ["Regular"],
+    handmadeDetails: "Curated handmade or small-batch product with seller-verified details.",
+    estimatedDelivery: "3-7 days",
+    policy,
+    shipping: { base: 69, regions: ["All India"], pincodePricing: { "110": 59, "400": 49, "560": 69 } },
+    seller: {
+      name: ["Akriti Karigar Hub", "Desi Kala Store", "Utsav Handmade", "Bazaar Bloom"][index % 4],
+      location: ["Jaipur, India", "Surat, India", "Lucknow, India", "Kochi, India"][index % 4],
+      verified: true,
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+      rating: 4.4 + (index % 5) / 10,
+      story: "A small Indian seller bringing craft, fashion, home, and food products online.",
+      socials: { instagram: "#", website: "#" }
+    },
+    rating: 4.3 + (index % 6) / 10,
+    reviews: [{ user: "Akriti Buyer", rating: 4.6, text: "Good quality and neatly packed." }]
+  }))
+);
 
 export const sellers = Array.from(
   products.reduce((map, product) => {

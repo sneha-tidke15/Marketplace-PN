@@ -12,6 +12,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails";
+import PolicyPage from "./pages/PolicyPage";
 import Register from "./pages/Register";
 import SellerDashboard from "./pages/SellerDashboard";
 import SellerLogin from "./pages/SellerLogin";
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/seller-dashboard" element={<ProtectedRoute role="seller"><SellerDashboard /></ProtectedRoute>} />
           <Route path="/customer-dashboard" element={<ProtectedRoute role="customer"><CustomerDashboard /></ProtectedRoute>} />
+          <Route path="/customer-dashboard/:section" element={<ProtectedRoute role="customer"><CustomerDashboard /></ProtectedRoute>} />
           <Route path="/account/orders" element={<ProtectedRoute role="customer"><OrdersPage /></ProtectedRoute>} />
           <Route path="/account/wishlist" element={<ProtectedRoute role="customer"><WishlistPage /></ProtectedRoute>} />
           <Route path="/account/addresses" element={<ProtectedRoute role="customer"><AddressesPage /></ProtectedRoute>} />
@@ -47,6 +49,7 @@ export default function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/policies/:slug" element={<PolicyPage />} />
         </Route>
       </Routes>
     </AnimatePresence>

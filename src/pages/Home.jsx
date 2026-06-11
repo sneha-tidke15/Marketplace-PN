@@ -53,15 +53,15 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <button type="button" onClick={() => scrollCategories(-1)} className="absolute -left-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-ink shadow-soft transition hover:scale-105 dark:bg-white/10 dark:text-white sm:grid" aria-label="Scroll categories left">
+          <button type="button" onClick={() => scrollCategories(-1)} className="absolute -left-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-ink shadow-soft transition hover:-translate-y-1 sm:grid" aria-label="Scroll categories left">
             <FiChevronLeft />
           </button>
-          <button type="button" onClick={() => scrollCategories(1)} className="absolute -right-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-ink shadow-soft transition hover:scale-105 dark:bg-white/10 dark:text-white sm:grid" aria-label="Scroll categories right">
+          <button type="button" onClick={() => scrollCategories(1)} className="absolute -right-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white text-ink shadow-soft transition hover:-translate-y-1 sm:grid" aria-label="Scroll categories right">
             <FiChevronRight />
           </button>
         </div>
         <div className="mt-8 text-center">
-          <Link to="/shop" className="pill-button bg-ink text-white shadow-soft dark:bg-pastelPink dark:text-ink">Explore more</Link>
+          <Link to="/shop" className="pill-button bg-ink text-white shadow-soft">Explore more</Link>
         </div>
       </section>
 

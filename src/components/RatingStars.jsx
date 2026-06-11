@@ -14,7 +14,7 @@ export default function RatingStars({ rating = 5 }) {
           <FaStar key={star} className="text-slate-200" />
         )
       )}
-      <span className="ml-1 text-xs font-bold text-slate-500 dark:text-slate-300">{rating}</span>
+      <span className="ml-1 text-xs font-bold text-slate-500">{rating}</span>
     </div>
   );
 }

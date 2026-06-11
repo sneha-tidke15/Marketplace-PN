@@ -1,26 +1,55 @@
 import { motion } from "framer-motion";
-import { FiBox, FiGift, FiHome, FiImage, FiLayers, FiPenTool, FiShoppingBag, FiStar } from "react-icons/fi";
+import { Amphora, CookingPot, Gem, Gift, Home, Lamp, MonitorSmartphone, Package, Paintbrush, Palette, Scissors, Shirt, ShoppingBag, Sparkles, Watch } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const categoryIcons = {
-  crochet: FiLayers,
-  "clay art": FiPenTool,
-  "resin art": FiStar,
-  "pot painting": FiHome,
-  candles: FiStar,
-  "handmade jewelry": FiStar,
-  handbags: FiShoppingBag,
-  embroidery: FiPenTool,
-  "home decor": FiHome,
-  "handmade paintings": FiImage,
-  "handmade gifts": FiGift,
-  macrame: FiLayers,
-  terracotta: FiBox,
-  "fabric art": FiLayers,
-  "handmade toys": FiGift,
-  "wooden crafts": FiBox,
-  "floral crafts": FiStar,
-  "handwoven products": FiLayers
+  crochet: Scissors,
+  "clay art": Amphora,
+  "resin art": Sparkles,
+  "pot painting": Amphora,
+  candles: Lamp,
+  "handmade jewelry": Gem,
+  handbags: ShoppingBag,
+  embroidery: Paintbrush,
+  "home decor": Home,
+  "handmade paintings": Palette,
+  "handmade gifts": Gift,
+  macrame: Scissors,
+  terracotta: Amphora,
+  "fabric art": Shirt,
+  "handmade toys": Gift,
+  "wooden crafts": Package,
+  "floral crafts": Sparkles,
+  "handwoven products": Shirt,
+  fashion: Shirt,
+  "men's wear": Shirt,
+  "women's wear": Shirt,
+  "kids wear": Shirt,
+  "ethnic wear": Shirt,
+  sarees: Shirt,
+  kurtis: Shirt,
+  lehengas: Shirt,
+  footwear: ShoppingBag,
+  bags: ShoppingBag,
+  watches: Watch,
+  jewellery: Gem,
+  home: Home,
+  furniture: Home,
+  lighting: Lamp,
+  kitchen: CookingPot,
+  electronics: MonitorSmartphone,
+  "mobile accessories": MonitorSmartphone,
+  "smart gadgets": MonitorSmartphone,
+  beauty: Sparkles,
+  "beauty products": Sparkles,
+  "personal care": Sparkles,
+  handmade: Gift,
+  handicrafts: Paintbrush,
+  paintings: Palette,
+  pottery: Amphora,
+  food: CookingPot,
+  "homemade snacks": CookingPot,
+  "organic products": Sparkles
 };
 
 const categoryDescriptions = {
@@ -35,16 +64,16 @@ const categoryDescriptions = {
 };
 
 export default function CategoryCard({ category }) {
-  const Icon = categoryIcons[category] || FiBox;
+  const Icon = categoryIcons[category] || Package;
 
   return (
-    <motion.div whileHover={{ y: -6, rotate: -1 }} className="glass-card h-full rounded-[28px] p-5 text-center">
+    <motion.div whileHover={{ y: -5 }} className="glass-card marketplace-card h-full rounded-[20px] border-[rgba(75,21,52,0.08)] bg-white p-5 text-center hover:border-secondary hover:bg-background">
       <Link to={`/shop?category=${encodeURIComponent(category)}`} className="block">
-        <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-white/70 text-3xl text-rose-500 shadow-inner dark:bg-white/10">
-          <Icon />
+        <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-surface-soft text-3xl text-primary shadow-inner">
+          <Icon className="h-8 w-8" />
         </div>
-        <h3 className="mt-4 text-lg font-black capitalize">{category}</h3>
-        <p className="mt-2 text-sm text-slate-500 dark:text-slate-300">
+        <h3 className="mt-4 min-h-[3.5rem] text-lg font-black capitalize leading-snug">{category}</h3>
+        <p className="mt-2 text-sm text-text-secondary">
           {categoryDescriptions[category] || "Explore beautiful handmade creations crafted with care."}
         </p>
       </Link>

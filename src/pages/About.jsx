@@ -20,7 +20,7 @@ export default function About() {
           <div>
             <p className="text-sm font-black uppercase tracking-[0.24em] text-rose-500">About Akriti</p>
             <h1 className="mt-4 text-4xl font-black leading-tight md:text-6xl">Welcome to Akriti</h1>
-            <div className="mt-6 space-y-5 text-lg leading-8 text-slate-700 dark:text-slate-100">
+            <div className="mt-6 space-y-5 text-lg leading-8 text-slate-700">
               <p>Welcome to Akriti, a creative marketplace where handmade artistry meets modern shopping.</p>
               <p>Our platform is specially designed for talented small business owners and artisans who create beautiful handmade products such as clay art, crochet items, candles, jewelry, and home decor. We believe every handmade product carries creativity, passion, and a personal touch that makes it truly special.</p>
               <p>Designed in Bharat<br />Crafted by talented artisans<br />Built to support small businesses</p>
@@ -53,7 +53,7 @@ export default function About() {
         Authentic Handmade Products
       </h2>
 
-      <p className="mt-3 leading-7 text-slate-600 dark:text-slate-200">
+      <p className="mt-3 leading-7 text-slate-600">
         Explore unique handmade creations crafted with love by talented local artisans across India.
       </p>
     </div>
@@ -64,7 +64,7 @@ export default function About() {
         Empowering Small Businesses
       </h2>
 
-      <p className="mt-3 leading-7 text-slate-600 dark:text-slate-200">
+      <p className="mt-3 leading-7 text-slate-600">
         We help creative sellers showcase their handmade products and grow their businesses online.
       </p>
     </div>
@@ -75,7 +75,7 @@ export default function About() {
         Trusted Shopping Experience
       </h2>
 
-      <p className="mt-3 leading-7 text-slate-600 dark:text-slate-200">
+      <p className="mt-3 leading-7 text-slate-600">
         Enjoy secure payments, smooth browsing, and a modern marketplace designed for handmade commerce.
       </p>
     </div>

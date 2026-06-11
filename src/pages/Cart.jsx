@@ -5,7 +5,7 @@ import { useShop } from "../context/ShopContext";
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { cart, cartTotal, removeFromCart, updateQuantity, isCustomer, showToast } = useShop();
+  const { cart, cartTotal, removeFromCart, updateQuantity, isCustomer, isOwnProduct, showToast } = useShop();
   const shipping = cart.length ? 79 : 0;
 
   return (
@@ -14,10 +14,10 @@ export default function Cart() {
         <h1 className="text-4xl font-black">Your cart</h1>
         {!cart.length ? (
           <div className="glass-card pastel-gradient mt-8 rounded-[32px] p-10 text-center">
-            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-white/70 text-3xl shadow-soft dark:bg-white/10"><FiShoppingBag /></div>
+            <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-white/70 text-3xl shadow-soft"><FiShoppingBag /></div>
             <p className="mt-5 text-2xl font-black">Your cart is waiting for something cute.</p>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-200">Login and add handmade pieces from verified small businesses when you are ready.</p>
-            <Link to="/shop" className="pill-button mt-6 bg-ink text-white dark:bg-pastelPink dark:text-ink">Browse products</Link>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-600">Login and add handmade pieces from verified small businesses when you are ready.</p>
+            <Link to="/shop" className="pill-button mt-6 bg-ink text-white">Browse products</Link>
           </div>
         ) : (
           <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
@@ -28,14 +28,14 @@ export default function Cart() {
                   <div className="flex flex-1 flex-col justify-between gap-4">
                     <div>
                       <h3 className="font-black">{item.title}</h3>
-                      <p className="text-sm capitalize text-slate-500 dark:text-slate-300">{item.category}</p>
+                      <p className="text-sm capitalize text-slate-500">{item.category}</p>
                     </div>
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <p className="text-xl font-black">₹{item.price}</p>
                       <div className="flex items-center gap-2">
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="grid h-9 w-9 place-items-center rounded-full bg-white/70 dark:bg-white/10"><FiMinus /></button>
+                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="grid h-9 w-9 place-items-center rounded-full bg-white/70"><FiMinus /></button>
                         <span className="w-8 text-center font-black">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="grid h-9 w-9 place-items-center rounded-full bg-white/70 dark:bg-white/10"><FiPlus /></button>
+                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="grid h-9 w-9 place-items-center rounded-full bg-white/70"><FiPlus /></button>
                         <button onClick={() => removeFromCart(item.id)} className="grid h-9 w-9 place-items-center rounded-full bg-pastelPink text-rose-600"><FiTrash2 /></button>
                       </div>
                     </div>
@@ -57,9 +57,13 @@ export default function Cart() {
                     navigate("/login");
                     return;
                   }
+                  if (cart.some((item) => isOwnProduct(item))) {
+                    showToast("You cannot purchase your own product.");
+                    return;
+                  }
                   navigate("/checkout");
                 }}
-                className="pill-button mt-6 w-full bg-ink text-white dark:bg-pastelPink dark:text-ink"
+                className="pill-button mt-6 w-full bg-ink text-white"
               >
                 Checkout
               </button>

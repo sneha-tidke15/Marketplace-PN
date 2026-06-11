@@ -27,10 +27,10 @@ export default function SellerLogin() {
   return (
     <AuthLayout>
       <div className="grid items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="rounded-[38px] bg-white/45 p-8 backdrop-blur dark:bg-white/10">
+        <div className="rounded-[38px] bg-white/45 p-8 backdrop-blur">
           <span className="rounded-full bg-mint px-4 py-2 text-sm font-black text-emerald-700">Seller access</span>
           <h2 className="mt-5 text-5xl font-black">Return to your maker dashboard</h2>
-          <p className="mt-4 leading-8 text-slate-600 dark:text-slate-200">Login to manage product listings, orders, customer messages, and shop analytics.</p>
+          <p className="mt-4 leading-8 text-slate-600">Login to manage product listings, orders, customer messages, and shop analytics.</p>
           <div className="mt-6 grid gap-3">
             {["Dashboard redirect after login", "Verified seller workspace", "Order and product tools"].map((item) => (
               <p key={item} className="flex items-center gap-2 font-bold"><FiCheckCircle className="text-emerald-500" /> {item}</p>
@@ -45,9 +45,9 @@ export default function SellerLogin() {
               <label className="flex items-center gap-2"><input type="checkbox" /> Remember me</label>
               <Link to="/forgot-password" className="text-rose-500">Forgot password?</Link>
             </div>
-            <button className="pill-button bg-gradient-to-r from-rose-300 via-lavender to-pastelBlue text-ink hover:scale-[1.02]">Go to dashboard <FiArrowRight /></button>
+            <button className="pill-button bg-gradient-to-r from-secondary to-secondary-light text-ink hover:scale-[1.02]">Go to dashboard <FiArrowRight /></button>
           </form>
-          <div className="mt-5"><SocialLoginButtons onSocialLogin={(provider) => { login({ email: `seller@${provider.toLowerCase()}.demo`, role: "seller" }); showToast(`${provider} seller login successful`); navigate("/seller-dashboard"); }} /></div>
+          <div className="mt-5"><SocialLoginButtons onSocialLogin={(provider) => { if (login({ email: `seller@${provider.toLowerCase()}.demo`, role: "seller" })) { showToast(`${provider} seller login successful`); navigate("/seller-dashboard"); } }} /></div>
           <p className="mt-6 text-center text-sm font-semibold">New seller? <Link to="/seller-register" className="text-rose-500">Create seller shop</Link></p>
         </AuthCard>
       </div>

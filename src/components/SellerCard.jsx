@@ -7,7 +7,7 @@ export default function SellerCard({ story }) {
   const slug = story.slug || slugifySeller(story.name);
 
   return (
-    <motion.article whileHover={{ y: -8, scale: 1.01 }} className="glass-card overflow-hidden rounded-[28px] transition">
+    <motion.article whileHover={{ y: -5 }} className="glass-card overflow-hidden rounded-[28px] transition">
       <img src={story.image} alt={story.name} className="h-48 w-full object-cover" />
       <div className="p-5">
         <div className="flex items-center gap-2">
@@ -15,8 +15,8 @@ export default function SellerCard({ story }) {
           {(story.verified ?? true) && <FiCheckCircle className="text-emerald-500" />}
         </div>
         <p className="mt-2 flex items-center gap-2 text-sm font-black text-amber-500"><FiStar /> {story.rating || 4.8} seller rating</p>
-        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-200">{story.story}</p>
-        <Link to={`/seller/${slug}`} className="pill-button mt-5 bg-gradient-to-r from-pastelPink to-pastelBlue text-ink hover:scale-[1.02]">
+        <p className="mt-2 text-sm leading-6 text-slate-600">{story.story}</p>
+        <Link to={`/seller/${slug}`} className="pill-button mt-5 bg-gradient-to-r from-secondary to-secondary-light text-ink hover:scale-[1.02]">
           Visit store <FiArrowRight />
         </Link>
       </div>

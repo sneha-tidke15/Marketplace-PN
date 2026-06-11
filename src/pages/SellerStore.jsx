@@ -18,17 +18,17 @@ export default function SellerStore() {
       <section className="pastel-gradient py-14">
         <div className="container-soft">
           <div className="glass-card grid gap-8 rounded-[38px] p-7 md:grid-cols-[180px_1fr] md:p-9">
-            <img src={seller.avatar} alt={seller.name} className="h-44 w-44 rounded-full border-8 border-white object-cover shadow-glow dark:border-white/20" />
+            <img src={seller.avatar} alt={seller.name} className="h-44 w-44 rounded-full border-8 border-white object-cover shadow-glow" />
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-4xl font-black md:text-5xl">{seller.name}</h1>
                 {seller.verified && <span className="inline-flex items-center gap-1 rounded-full bg-mint px-3 py-1 text-xs font-black text-emerald-700"><FiCheckCircle /> Verified</span>}
               </div>
-              <p className="mt-3 flex items-center gap-2 font-bold text-slate-600 dark:text-slate-200"><FiMapPin /> {seller.location}</p>
-              <p className="mt-4 max-w-2xl leading-7 text-slate-600 dark:text-slate-200">{seller.story}</p>
+              <p className="mt-3 flex items-center gap-2 font-bold text-slate-600"><FiMapPin /> {seller.location}</p>
+              <p className="mt-4 max-w-2xl leading-7 text-slate-600">{seller.story}</p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-black dark:bg-white/10"><FiStar className="text-amber-400" /> {seller.rating} rating</span>
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-black dark:bg-white/10"><FiShoppingBag /> {sellerProducts.length} products</span>
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-black"><FiStar className="text-amber-400" /> {seller.rating} rating</span>
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-black"><FiShoppingBag /> {sellerProducts.length} products</span>
               </div>
             </div>
           </div>

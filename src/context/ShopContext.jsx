@@ -10,11 +10,11 @@ export function ShopProvider({ children }) {
   const [sellerProducts, setSellerProducts] = useState(() => JSON.parse(localStorage.getItem("akriti-seller-products") || "[]"));
   const [sellerCategories, setSellerCategories] = useState(() => JSON.parse(localStorage.getItem("akriti-seller-categories") || "[]"));
   const [reviews, setReviews] = useState(() => JSON.parse(localStorage.getItem("akriti-reviews") || "{}"));
-  const [orders] = useState(() => JSON.parse(localStorage.getItem("akriti-orders") || JSON.stringify([
+  const [orders, setOrders] = useState(() => JSON.parse(localStorage.getItem("akriti-orders") || JSON.stringify([
     { id: "AK-1008", productId: 3, status: "Shipped", payment: "UPI", expectedDelivery: "27 May 2026" },
+    { id: "AK-0997", productId: 5, status: "Processing", payment: "UPI", expectedDelivery: "30 May 2026" },
     { id: "AK-0996", productId: 6, status: "Delivered", payment: "Card", deliveredAt: "15 May 2026" }
   ])));
-  const [darkMode, setDarkMode] = useState(false);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [notifications, setNotifications] = useState(() => {
     const saved = localStorage.getItem("akriti-notifications");
@@ -28,10 +28,6 @@ export function ShopProvider({ children }) {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  // Keep Tailwind dark mode in sync with app state.
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-  }, [darkMode]);
 
   // Persist fake frontend authentication so refreshes keep the user logged in.
   useEffect(() => {
@@ -58,18 +54,22 @@ export function ShopProvider({ children }) {
     localStorage.setItem("akriti-reviews", JSON.stringify(reviews));
   }, [reviews]);
 
+  useEffect(() => {
+    localStorage.setItem("akriti-orders", JSON.stringify(orders));
+  }, [orders]);
+
   const showToast = useCallback((message) => {
     toast(message, {
       duration: 2400,
       style: {
-        background: darkMode ? "#2d2638" : "#fff8f0",
-        border: darkMode ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(255,214,232,0.8)",
-        color: darkMode ? "#fff7fb" : "#34313f",
+        background: "#FAF8F5",
+        border: "1px solid rgba(75,21,52,0.12)",
+        color: "#1F1A17",
         fontWeight: 800,
         borderRadius: "999px"
       }
     });
-  }, [darkMode]);
+  }, []);
 
   const redirectToLogin = useCallback((message = "Please login first") => {
     showToast(message);
@@ -80,12 +80,18 @@ export function ShopProvider({ children }) {
 
   const isLoggedIn = Boolean(user);
   const role = user?.role || null;
-  const isCustomer = isLoggedIn && role === "customer";
+  const isCustomer = isLoggedIn && (role === "customer" || role === "seller");
   const isSeller = isLoggedIn && role === "seller";
+
+  const isOwnProduct = useCallback((product) => Boolean(user?.id && product?.sellerId && product.sellerId === user.id), [user?.id]);
 
   const addToCart = (product, quantity = 1) => {
     if (!isCustomer) {
       redirectToLogin("Please register before purchasing");
+      return false;
+    }
+    if (isOwnProduct(product)) {
+      showToast("You cannot purchase your own product.");
       return false;
     }
     setCart((items) => {
@@ -141,16 +147,25 @@ export function ShopProvider({ children }) {
   const login = ({ email, phone, password, role = "customer" }) => {
     const accounts = getAccounts();
     const account = accounts.find((item) =>
-      item.role === role &&
+      (item.role === role || item.roles?.includes(role)) &&
       (item.email?.toLowerCase() === email?.toLowerCase() || item.phone === phone) &&
       (!password || item.password === password)
     );
+    if (role === "seller" && !account) {
+      showToast("Please complete Seller Registration first");
+      return false;
+    }
     if (!account && accounts.length) {
       showToast("No matching account found");
       return false;
     }
     const name = account?.name || email?.split("@")[0] || (role === "seller" ? "Seller" : "Customer");
-    setUser({ ...account, name, email: account?.email || email, phone: account?.phone || phone, role });
+    const roles = account?.roles || [role];
+    if (role === "seller" && !roles.includes("seller")) {
+      showToast("Please complete Seller Registration first");
+      return false;
+    }
+    setUser({ ...account, name, email: account?.email || email, phone: account?.phone || phone, roles, role });
     showToast(`${role === "seller" ? "Seller" : "Customer"} login successful`);
     return true;
   };
@@ -158,8 +173,8 @@ export function ShopProvider({ children }) {
   const requestOtp = (account) => {
     const role = account.role || "customer";
     const accounts = getAccounts();
-    const emailExists = accounts.some((item) => item.email?.toLowerCase() === account.email?.toLowerCase());
-    const phoneExists = accounts.some((item) => item.phone === account.phone);
+    const emailExists = accounts.some((item) => item.email?.toLowerCase() === account.email?.toLowerCase() && (item.role === role || item.roles?.includes(role)));
+    const phoneExists = accounts.some((item) => item.phone === account.phone && (item.role === role || item.roles?.includes(role)));
     if (emailExists || phoneExists) {
       showToast(emailExists ? "Email already registered" : "Mobile number already registered");
       return null;
@@ -167,7 +182,7 @@ export function ShopProvider({ children }) {
     const code = String(Math.floor(100000 + Math.random() * 900000));
     const key = account.email?.toLowerCase() || account.phone;
     const pending = getPendingOtps();
-    pending[key] = { account: { ...account, role }, code, expiresAt: Date.now() + 5 * 60 * 1000 };
+    pending[key] = { account: { ...account, role, roles: [role] }, code, expiresAt: Date.now() + 5 * 60 * 1000 };
     savePendingOtps(pending);
     showToast(`OTP sent: ${code}`);
     return code;
@@ -199,13 +214,15 @@ export function ShopProvider({ children }) {
   const register = (account) => {
     const role = account.role || "customer";
     const accounts = getAccounts();
-    const emailExists = accounts.some((item) => item.email?.toLowerCase() === account.email?.toLowerCase());
-    const phoneExists = accounts.some((item) => item.phone === account.phone);
+    const emailExists = accounts.some((item) => item.email?.toLowerCase() === account.email?.toLowerCase() && (item.role === role || item.roles?.includes(role)));
+    const phoneExists = accounts.some((item) => item.phone === account.phone && (item.role === role || item.roles?.includes(role)));
     if (emailExists || phoneExists) {
       showToast(emailExists ? "Email already registered" : "Mobile number already registered");
       return false;
     }
-    const savedAccount = { ...account, role, id: `acc-${Date.now()}` };
+    const existingByPhone = accounts.find((item) => item.phone === account.phone);
+    const roles = [...new Set([...(existingByPhone?.roles || []), ...(account.roles || []), role])];
+    const savedAccount = { ...account, role, roles, id: `acc-${Date.now()}` };
     saveAccounts([...accounts, savedAccount]);
     setUser(savedAccount);
     showToast(`${role === "seller" ? "Seller" : "Customer"} account created`);
@@ -228,10 +245,21 @@ export function ShopProvider({ children }) {
     return true;
   };
 
+  const updateSellerCategory = (id, updates) => {
+    setSellerCategories((items) => items.map((item) => (item.id === id ? { ...item, ...updates, name: updates.name?.trim().toLowerCase() || item.name } : item)));
+    showToast("Category updated");
+  };
+
+  const deleteSellerCategory = (id) => {
+    setSellerCategories((items) => items.filter((item) => item.id !== id));
+    showToast("Category deleted");
+  };
+
   const addSellerProduct = (product) => {
     const savedProduct = {
       ...product,
       id: `seller-${Date.now()}`,
+      sellerId: user?.id,
       price: Number(product.price || product.basePrice || 0),
       rating: 0,
       reviews: [],
@@ -244,6 +272,18 @@ export function ShopProvider({ children }) {
     return savedProduct;
   };
 
+  const updateSellerProduct = (id, updates) => {
+    setSellerProducts((items) => items.map((item) => (item.id === id ? { ...item, ...updates, price: Number(updates.price ?? item.price), stock: Number(updates.stock ?? item.stock ?? 0) } : item)));
+    addNotification("seller", "Product details updated");
+    showToast("Product updated");
+  };
+
+  const deleteSellerProduct = (id) => {
+    setSellerProducts((items) => items.filter((item) => item.id !== id));
+    addNotification("seller", "Product deleted from seller listing");
+    showToast("Product deleted");
+  };
+
   const addReview = ({ productId, rating, text }) => {
     const delivered = orders.some((order) => Number(order.productId) === Number(productId) && order.status === "Delivered");
     if (!delivered) {
@@ -253,6 +293,42 @@ export function ShopProvider({ children }) {
     const review = { user: user?.name || "Customer", rating: Number(rating), text, createdAt: new Date().toISOString() };
     setReviews((items) => ({ ...items, [productId]: [review, ...(items[productId] || [])] }));
     showToast("Thanks for your feedback");
+    return true;
+  };
+
+  const placeOrder = ({ payment = "UPI" } = {}) => {
+    if (!cart.length) {
+      showToast("Your cart is empty");
+      return false;
+    }
+    if (cart.some((item) => isOwnProduct(item))) {
+      showToast("You cannot purchase your own product.");
+      return false;
+    }
+    const createdOrders = cart.map((item, index) => ({
+      id: `AK-${Date.now().toString().slice(-6)}-${index + 1}`,
+      productId: item.id,
+      status: "Pending",
+      payment,
+      expectedDelivery: "5-8 business days"
+    }));
+    setOrders((items) => [...createdOrders, ...items]);
+    setCart([]);
+    showToast("Order placed successfully");
+    addNotification("customer", "Order placed notification: your handmade order is confirmed.");
+    addNotification("seller", "New order notification: prepare and ship a customer order.");
+    return true;
+  };
+
+  const cancelOrder = (orderId) => {
+    const order = orders.find((item) => item.id === orderId);
+    if (!order) return false;
+    if (!["Pending", "Processing"].includes(order.status)) {
+      showToast("Only pending or processing orders can be cancelled.");
+      return false;
+    }
+    setOrders((items) => items.map((item) => item.id === orderId ? { ...item, status: "Cancelled" } : item));
+    showToast("Order cancelled successfully.");
     return true;
   };
 
@@ -277,12 +353,12 @@ export function ShopProvider({ children }) {
     orders,
     cart,
     wishlist,
-    darkMode,
     user,
     role,
     isLoggedIn,
     isCustomer,
     isSeller,
+    isOwnProduct,
     isAuthenticated: isLoggedIn,
     recentlyViewed,
     cartTotal,
@@ -290,7 +366,6 @@ export function ShopProvider({ children }) {
     removeFromCart,
     updateQuantity,
     toggleWishlist,
-    setDarkMode,
     showToast,
     redirectToLogin,
     addRecentlyViewed,
@@ -301,8 +376,14 @@ export function ShopProvider({ children }) {
     logout,
     notifications,
     addNotification,
+    placeOrder,
+    cancelOrder,
     addSellerCategory,
+    updateSellerCategory,
+    deleteSellerCategory,
     addSellerProduct,
+    updateSellerProduct,
+    deleteSellerProduct,
     addReview
   };
 
