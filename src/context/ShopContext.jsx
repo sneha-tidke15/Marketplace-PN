@@ -111,6 +111,8 @@ export function ShopProvider({ children }) {
   const saveAccounts = (accounts) => localStorage.setItem("akriti-accounts", JSON.stringify(accounts));
   const getPendingOtps = () => JSON.parse(localStorage.getItem("akriti-pending-otps") || "{}");
   const savePendingOtps = (otps) => localStorage.setItem("akriti-pending-otps", JSON.stringify(otps));
+  const getRecoveryOtps = () => JSON.parse(localStorage.getItem("akriti-recovery-otps") || "{}");
+  const saveRecoveryOtps = (otps) => localStorage.setItem("akriti-recovery-otps", JSON.stringify(otps));
 
   const addNotification = (role, text) => {
     setNotifications((items) => [{ id: `n-${Date.now()}`, role, text, read: false }, ...items].slice(0, 12));
@@ -209,6 +211,58 @@ export function ShopProvider({ children }) {
     delete pending[key];
     savePendingOtps(pending);
     return register(entry.account);
+  };
+
+  const requestPasswordOtp = (phone) => {
+    const account = getAccounts().find((item) => item.phone === phone);
+    if (!account) {
+      showToast("No account found for this mobile number");
+      return null;
+    }
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const pending = getRecoveryOtps();
+    pending[phone] = { code, expiresAt: Date.now() + 5 * 60 * 1000, verified: false };
+    saveRecoveryOtps(pending);
+    showToast(`OTP sent: ${code}`);
+    return { code, expiresAt: pending[phone].expiresAt };
+  };
+
+  const verifyPasswordOtp = ({ phone, otp }) => {
+    const pending = getRecoveryOtps();
+    const entry = pending[phone];
+    if (!entry) {
+      showToast("Please request OTP first");
+      return false;
+    }
+    if (Date.now() > entry.expiresAt) {
+      delete pending[phone];
+      saveRecoveryOtps(pending);
+      showToast("OTP expired. Please resend OTP");
+      return false;
+    }
+    if (entry.code !== otp) {
+      showToast("Invalid OTP");
+      return false;
+    }
+    pending[phone] = { ...entry, verified: true };
+    saveRecoveryOtps(pending);
+    showToast("Mobile number verified");
+    return true;
+  };
+
+  const resetPasswordWithOtp = ({ phone, password }) => {
+    const pending = getRecoveryOtps();
+    if (!pending[phone]?.verified) {
+      showToast("Verify OTP before resetting password");
+      return false;
+    }
+    const accounts = getAccounts();
+    const updated = accounts.map((item) => item.phone === phone ? { ...item, password } : item);
+    saveAccounts(updated);
+    delete pending[phone];
+    saveRecoveryOtps(pending);
+    showToast("Password reset successful. Please login.");
+    return true;
   };
 
   const register = (account) => {
@@ -373,6 +427,9 @@ export function ShopProvider({ children }) {
     register,
     requestOtp,
     verifyOtpAndRegister,
+    requestPasswordOtp,
+    verifyPasswordOtp,
+    resetPasswordWithOtp,
     logout,
     notifications,
     addNotification,

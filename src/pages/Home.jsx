@@ -37,9 +37,47 @@ export default function Home() {
       <section className="container-soft py-14">
         <SectionHeading eyebrow="Featured" title="Handmade favorites" text="A curated shelf of soft, giftable pieces from verified small sellers." />
         {loadingSections ? <LoadingSkeleton count={4} /> : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((product) => <ProductCard key={product.id} product={product} onQuickView={setQuickProduct} />)}
-          </div>
+          <>
+  {/* Mobile Layout */}
+  <div className="grid grid-cols-2 gap-3 md:hidden">
+    {featured.map((product) => (
+      <Link
+        key={product.id}
+        to={`/product/${product.id}`}
+        className="overflow-hidden rounded-xl bg-white shadow-sm"
+      >
+        <div className="aspect-square">
+          <img
+            src={product.images?.[0] || product.image}
+            alt={product.title}
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <div className="p-2">
+          <p className="truncate text-[11px]">
+            {product.title}
+          </p>
+
+          <p className="text-[11px] font-bold text-green-600">
+            ₹{product.price}
+          </p>
+        </div>
+      </Link>
+    ))}
+  </div>
+
+  {/* Desktop Layout */}
+  <div className="hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-4">
+    {featured.map((product) => (
+      <ProductCard
+        key={product.id}
+        product={product}
+        onQuickView={setQuickProduct}
+      />
+    ))}
+  </div>
+</>
         )}
       </section>
 

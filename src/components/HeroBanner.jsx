@@ -10,7 +10,7 @@ export default function HeroBanner() {
       <div className="container-soft grid items-center gap-12 py-12 lg:grid-cols-[1.05fr_0.95fr]">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
           <span className="rounded-full border border-secondary/40 bg-white px-4 py-2 text-sm font-extrabold text-primary shadow-soft">
-            Designed in Bharat
+            Designed in भारत 
           </span>
           <h1 className="heading-font mt-6 text-5xl font-bold leading-tight text-primary sm:text-6xl lg:text-8xl">
             AKRITI

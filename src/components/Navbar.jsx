@@ -2,8 +2,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { FiHeart, FiLogOut, FiMenu, FiSearch, FiShoppingBag, FiUser, FiX } from "react-icons/fi";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import akritiLogo from "../assets/akritilogo.jpeg";
+import akritiLogo2 from "../assets/akritilogo2.png";
 import { useShop } from "../context/ShopContext";
+import SearchSuggestions from "./SearchSuggestions";
 
 const navLinks = [
   { label: "Home", to: "/" },
@@ -28,54 +29,54 @@ export default function Navbar() {
   }, []);
 
   const submitSearch = (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  if (!search.trim()) return;
+    if (!search.trim()) return;
 
-  navigate(`/shop?search=${encodeURIComponent(search.trim())}`);
+    navigate(`/shop?search=${encodeURIComponent(search.trim())}`);
 
-  setShowSearch(false); // Close desktop search popup
-  setOpen(false);       // Close mobile menu
-};
+    setShowSearch(false); // Close desktop search popup
+    setOpen(false);       // Close mobile menu
+  };
 
   const linkClass = ({ isActive }) =>
     `px-2 py-2 text-sm font-bold transition ${isActive ? "border-b-2 border-secondary text-primary" : "text-text-primary hover:text-primary"}`;
 
-  
+
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef(null);
   useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      searchRef.current &&
-      !searchRef.current.contains(event.target)
-    ) {
-      setShowSearch(false);
-    }
-  };
+    const handleClickOutside = (event) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target)
+      ) {
+        setShowSearch(false);
+      }
+    };
 
-  document.addEventListener(
-    "mousedown",
-    handleClickOutside
-  );
-
-  return () => {
-    document.removeEventListener(
+    document.addEventListener(
       "mousedown",
       handleClickOutside
     );
-  };
-}, []);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+  }, []);
 
   return (
     <header className={`sticky top-0 z-[9999] border-b border-[rgba(75,21,52,0.12)] bg-white/95 backdrop-blur-[10px] transition-shadow ${scrolled ? "shadow-soft" : "shadow-sm"}`}>
       <nav className="container-soft flex min-h-20 items-center justify-between gap-3 py-3">
         <Link to="/" className="flex items-center" aria-label="Akriti home">
           <img
-  src={akritiLogo}
-  alt="Akriti"
-  className="h-12 w-auto rounded-2xl border border-secondary/30 shadow-sm object-contain sm:h-14 lg:h-16"
-/>
+            src={akritiLogo2}
+            alt="Akriti"
+            className="h-16 w-auto object-contain sm:h-19 lg:h-19"
+          />
         </Link>
 
         <div className="hidden items-center gap-1 xl:flex">
@@ -85,45 +86,30 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
 
- <div
-  ref={searchRef}
-  className="relative"
->
-  <button
-    title="Search"
-    onClick={() => setShowSearch(!showSearch)}
-    className="grid h-11 w-11 place-items-center rounded-full bg-white shadow-sm"
-    aria-label="Search"
-  >
-    <FiSearch />
-  </button>
+          <div
+            ref={searchRef}
+            className="relative"
+          >
+            <button
+              title="Search"
+              onClick={() => setShowSearch(!showSearch)}
+              className="grid h-11 w-11 place-items-center rounded-full bg-white shadow-sm"
+              aria-label="Search"
+            >
+              <FiSearch />
+            </button>
 
-  {showSearch && (
-    <form
-      onSubmit={submitSearch}
-      className="absolute right-0 top-full z-50 mt-2 flex w-72 items-center gap-2 rounded-2xl bg-white px-4 py-3 shadow-lg"
-    >
-      <FiSearch className="text-primary" />
+            {showSearch && (
+              <form
+                onSubmit={submitSearch}
+                className="absolute right-0 top-full z-50 mt-2 w-[min(22rem,calc(100vw-2rem))] rounded-2xl bg-white p-2 shadow-lg"
+              >
+                <SearchSuggestions value={search} onChange={setSearch} placeholder="Search products..." onSelect={() => setShowSearch(false)} />
+              </form>
+            )}
+          </div>
 
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search products..."
-        className="w-full outline-none"
-        autoFocus
-      />
 
-      <button
-        type="submit"
-        className="rounded-lg bg-primary px-3 py-1 text-white"
-      >
-        Go
-      </button>
-    </form>
-  )}
-</div>
-
-        
           <div className="hidden items-center gap-2 lg:flex">
             {!user ? (
               <>
@@ -155,17 +141,35 @@ export default function Navbar() {
       </nav>
 
       <AnimatePresence>
-        {open && (
-          <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} className="fixed inset-y-0 right-0 z-50 w-80 max-w-[90vw] border-l border-primary/10 bg-[#FAF8F5] p-5 text-text-primary shadow-lift xl:hidden">
-            <button onClick={() => setOpen(false)} className="ml-auto grid h-11 w-11 place-items-center rounded-full bg-white/70"><FiX /></button>
-            <div className="mt-8 grid gap-3">
+  {open && (
+    <>
+      {/* Background overlay */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setOpen(false)}
+        className="fixed inset-0 bg-black/40 xl:hidden"
+      />
+
+      {/* Mobile menu */}
+      <motion.div
+  initial={{ x: "100%" }}
+  animate={{ x: 0 }}
+  exit={{ x: "100%" }}
+  className="fixed inset-y-0 right-0 z-[10001] w-80 max-w-[90vw] border-4 bg-[#FAF8F5] p-5 xl:hidden"
+>
+  <div className="p-5">
+            <button onClick={() => setOpen(false)} className="ml-auto grid h-11 w-11 place-items-center rounded-full bg-white">
+  <FiX />
+</button>
+           <div className="mt-8 grid gap-3 bg-white ">
               {navLinks.map((link) => <NavLink key={link.to} to={link.to} onClick={() => setOpen(false)} className={linkClass}>{link.label}</NavLink>)}
               {isSeller && <NavLink to="/seller-dashboard" onClick={() => setOpen(false)} className={linkClass}>Seller Dashboard</NavLink>}
               {!user ? (
                 <>
                   <NavLink to="/login" onClick={() => setOpen(false)} className={linkClass}>Login</NavLink>
                   <NavLink to="/seller-login" onClick={() => setOpen(false)} className={linkClass}>Seller Login</NavLink>
-                  <NavLink to="/seller-register" onClick={() => setOpen(false)} className={linkClass}>Become a Seller</NavLink>
                 </>
               ) : (
                 <>
@@ -174,8 +178,10 @@ export default function Navbar() {
                 </>
               )}
             </div>
-          </motion.div>
-        )}
+            </div>
+                    </motion.div>
+        </>
+      )}
       </AnimatePresence>
     </header>
   );

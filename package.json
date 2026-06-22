@@ -17,6 +17,7 @@
     "react-hot-toast": "^2.6.0",
     "react-icons": "latest",
     "react-router-dom": "latest",
+    "recharts": "latest",
     "vite": "latest"
   },
   "devDependencies": {

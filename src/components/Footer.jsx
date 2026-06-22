@@ -2,7 +2,7 @@ import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FiGlobe, FiHeart, FiMail, FiPhone } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useShop } from "../context/ShopContext";
-import akritiLogo from "../assets/akritilogo.jpeg";
+import footerLogo from "../assets/footerlogo.png";
 
 export default function Footer() {
   const { isCustomer, isSeller } = useShop();
@@ -13,9 +13,9 @@ export default function Footer() {
         <div className="lg:max-w-sm">
           <Link to="/" className="flex items-center" aria-label="Akriti home">
                     <img
-  src={akritiLogo}
+  src={footerLogo}
   alt="Akriti"
-  className="h-12 w-auto rounded-2xl border border-secondary/30 shadow-sm object-contain sm:h-14 lg:h-16"
+  className="h-12 w-auto shadow-sm object-contain sm:h-14 lg:h-16"
 />
                   </Link>
           <p className="mt-4 max-w-sm text-sm leading-6 text-surface-soft/80">

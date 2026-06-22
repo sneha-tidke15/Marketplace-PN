@@ -24,7 +24,18 @@ export default function ProductDetails() {
 
   if (!product) return <div className="container-soft py-20 text-center font-black">Product not found.</div>;
 
-  const related = products.filter((item) => item.category === product.category && String(item.id) !== String(product.id)).slice(0, 3);
+  const related = products
+    .filter((item) => String(item.id) !== String(product.id))
+    .map((item) => {
+      const sharedTags = (item.eventTags || []).filter((tag) => product.eventTags?.includes(tag)).length;
+      const sameCategory = item.category === product.category ? 4 : 0;
+      const sameSeller = item.seller?.name === product.seller?.name ? 2 : 0;
+      return { item, score: sameCategory + sameSeller + sharedTags };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || b.item.rating - a.item.rating)
+    .slice(0, 8)
+    .map(({ item }) => item);
   const productReviews = [...(reviews[product.id] || []), ...(product.reviews || [])];
   const canReview = orders.some((order) => Number(order.productId) === Number(product.id) && order.status === "Delivered");
   const ownProduct = isOwnProduct(product);
@@ -49,13 +60,13 @@ export default function ProductDetails() {
 
   return (
     <PageTransition>
-      <section className="container-soft grid gap-10 py-12 lg:grid-cols-[0.95fr_1.05fr]">
+      <section className="container-soft grid gap-8 py-8 sm:py-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-10 lg:py-12">
         <ProductGallery images={product.images} title={product.title} />
         <div>
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-sm font-black uppercase tracking-wide text-rose-400">{product.category}</p>
-              <h1 className="mt-2 text-4xl font-black md:text-5xl">{product.title}</h1>
+              <h1 className="mt-2 text-3xl font-black sm:text-4xl md:text-5xl">{product.title}</h1>
             </div>
             <WishlistButton product={product} />
           </div>
@@ -72,7 +83,7 @@ export default function ProductDetails() {
               <div className="mt-2 flex flex-wrap gap-2">{product.sizes?.map((size) => <span key={size} className="rounded-full bg-white/70 px-3 py-2 text-sm font-bold">{size}</span>)}</div>
             </div>
           </div>
-          <div className="mt-7 flex flex-wrap gap-3">
+          <div className="mt-7 hidden flex-wrap gap-3 sm:flex">
             <button disabled={ownProduct} onClick={handleAddToCart} className="pill-button bg-ink text-white hover:shadow-glow disabled:cursor-not-allowed disabled:opacity-60"><FiShoppingBag /> Add to cart</button>
             {!ownProduct && <button onClick={handleBuyNow} className="pill-button bg-pastelPink text-ink hover:scale-[1.02]"><FiZap /> Buy now</button>}
           </div>
@@ -131,17 +142,35 @@ export default function ProductDetails() {
             <button disabled={!canReview} className="pill-button bg-ink text-white disabled:opacity-60">Submit review</button>
           </div>
         </form>
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {productReviews.map((review, index) => <ReviewCard key={`${review.user}-${index}`} review={review} highlight={review.rating > 3.5} />)}
         </div>
       </section>
 
       <section className="container-soft py-12">
-        <h2 className="mb-6 text-3xl font-black">Related products</h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-sm font-black uppercase text-accent">More from this handmade lane</p>
+            <h2 className="text-3xl font-black">Related Products</h2>
+          </div>
+          <Link to={`/shop?category=${encodeURIComponent(product.category)}`} className="pill-button bg-white px-4 py-2">View category</Link>
+        </div>
+        <div className="hide-scrollbar -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-3 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">
           {related.map((item) => <ProductCard key={item.id} product={item} onQuickView={() => {}} />)}
         </div>
       </section>
+      {!ownProduct && (
+        <div className="fixed inset-x-0 bottom-0 z-[9997] border-t border-[rgba(75,21,52,0.12)] bg-white/95 px-4 pb-[calc(env(safe-area-inset-bottom)+5.75rem)] pt-3 shadow-[0_-14px_34px_rgba(75,21,52,0.16)] backdrop-blur sm:hidden">
+          <div className="mx-auto grid max-w-xl grid-cols-[1fr_auto_auto] items-center gap-2">
+            <div className="min-w-0">
+              <p className="text-[11px] font-black uppercase text-text-secondary">Price</p>
+              <p className="truncate text-xl font-black text-primary">₹{product.price}</p>
+            </div>
+            <button onClick={handleAddToCart} className="pill-button bg-ink px-4 py-3 text-white"><FiShoppingBag /> Cart</button>
+            <button onClick={handleBuyNow} className="pill-button bg-pastelPink px-4 py-3 text-ink"><FiZap /> Buy</button>
+          </div>
+        </div>
+      )}
     </PageTransition>
   );
 }
